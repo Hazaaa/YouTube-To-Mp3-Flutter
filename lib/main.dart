@@ -41,7 +41,25 @@ class MyApp extends StatelessWidget {
               color: ThemeConstants.secondaryColor,
               width: ThemeConstants.windowBorderSize,
               child: Column(
-                children: const [SizedBox(height: 8), Header(), HomePage()],
+                children: const [
+                  SizedBox(height: 8),
+                  Header(),
+                  Expanded(child: HomePage())
+                  // Expanded(
+                  //   child: Stack(
+                  //     children: const [
+                  //       AnimatedPositioned(
+                  //         top: 40,
+                  //         bottom: 0,
+                  //         left: 0,
+                  //         right: 0,
+                  //         duration: Duration(milliseconds: 500),
+                  //         child: TextField(),
+                  //       )
+                  //     ],
+                  //   ),
+                  // )
+                ],
               ),
             ),
           )),

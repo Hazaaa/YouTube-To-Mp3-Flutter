@@ -17,15 +17,41 @@ class _HomePageState extends State<HomePage> {
     final store = Provider.of<MainStore>(context);
     final size = MediaQuery.of(context).size;
 
-    return Expanded(
-      child: Center(
-        child: Observer(
-          builder: (_) => AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            margin: EdgeInsets.only(
-                bottom: !store.convertingInProgress ? 0 : size.height * 0.7),
-            child: Input(),
-          ),
+    return Observer(
+      builder: (_) => SizedBox(
+        width: size.width,
+        child: Stack(
+          children: [
+            AnimatedPositioned(
+              top: !store.actionInProgress
+                  ? size.height * 0.4
+                  : size.height * 0.05,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              duration: const Duration(milliseconds: 500),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                child: const Input(),
+              ),
+            ),
+            Positioned(
+              top: size.height * 0.4,
+              left: size.width * 0.45,
+              child: AnimatedOpacity(
+                opacity: store.actionInProgress ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 400),
+                child: const SizedBox(
+                  width: 70,
+                  height: 70,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 6.0,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );

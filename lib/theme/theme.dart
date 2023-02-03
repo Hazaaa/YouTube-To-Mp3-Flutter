@@ -40,5 +40,11 @@ final ThemeData customTheme = ThemeData(
           width: ThemeConstants.inputBorderSize,
           color: ThemeConstants.inputBorderColor),
     ),
+    disabledBorder: OutlineInputBorder(
+      borderRadius: ThemeConstants.inputBorderRadius,
+      borderSide: BorderSide(
+          width: ThemeConstants.inputBorderSize,
+          color: ThemeConstants.secondaryColor),
+    ),
   ),
 );
