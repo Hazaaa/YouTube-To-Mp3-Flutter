@@ -21,14 +21,16 @@ class Input extends StatelessWidget {
             backgroundColor: Colors.transparent),
         cursorColor: ThemeConstants.inputCursorColor,
         decoration: InputDecoration(
+          errorText: store.error.isEmpty ? null : store.error,
           hintText: 'Paste YouTube or YouTube Music link',
           prefixIcon: store.videoUrl.isNotEmpty
               ? IconButton(
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
                   icon: const Icon(Icons.cancel_outlined),
+                  tooltip: 'Clear',
                   onPressed: () {
-                    store.videoUrl = '';
+                    store.clearInput();
                     inputTextController.clear();
                   },
                 )
@@ -50,10 +52,10 @@ class Input extends StatelessWidget {
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,
               icon: const Icon(Icons.download),
-              tooltip: "Get video metadata",
+              tooltip: 'Get video metadata',
               onPressed: () {
                 if (store.videoUrl.isNotEmpty) {
-                  store.convert();
+                  store.getVideoMetadata();
                 }
               },
             ),

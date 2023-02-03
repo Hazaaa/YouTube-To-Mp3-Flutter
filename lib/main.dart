@@ -2,13 +2,11 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_to_mp3_v2/pages/home.dart';
+import 'package:youtube_to_mp3_v2/services/download_service.dart';
 import 'package:youtube_to_mp3_v2/store/main_store.dart';
 import 'package:youtube_to_mp3_v2/theme/theme.dart';
 import 'package:youtube_to_mp3_v2/theme/theme_constants.dart';
 import 'package:youtube_to_mp3_v2/widgets/header.dart';
-
-// Instatiate the store
-final appStore = MainStore();
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +29,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [Provider<MainStore>(create: (_) => MainStore())],
+      providers: [
+        Provider<DownloadService>(
+          create: (_) => DownloadService(),
+        ),
+        ProxyProvider<DownloadService, MainStore>(
+          update: (_, downloadService, __) => MainStore(downloadService),
+        )
+      ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'YouTube To Mp3',
@@ -45,20 +50,6 @@ class MyApp extends StatelessWidget {
                   SizedBox(height: 8),
                   Header(),
                   Expanded(child: HomePage())
-                  // Expanded(
-                  //   child: Stack(
-                  //     children: const [
-                  //       AnimatedPositioned(
-                  //         top: 40,
-                  //         bottom: 0,
-                  //         left: 0,
-                  //         right: 0,
-                  //         duration: Duration(milliseconds: 500),
-                  //         child: TextField(),
-                  //       )
-                  //     ],
-                  //   ),
-                  // )
                 ],
               ),
             ),

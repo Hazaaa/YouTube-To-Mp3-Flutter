@@ -25,21 +25,59 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  late final _$convertingInProgressAtom =
-      Atom(name: '_MainStore.convertingInProgress', context: context);
+  late final _$videoMetadataAtom =
+      Atom(name: '_MainStore.videoMetadata', context: context);
 
   @override
-  bool get convertingInProgress {
-    _$convertingInProgressAtom.reportRead();
-    return super.convertingInProgress;
+  Video? get videoMetadata {
+    _$videoMetadataAtom.reportRead();
+    return super.videoMetadata;
   }
 
   @override
-  set convertingInProgress(bool value) {
-    _$convertingInProgressAtom.reportWrite(value, super.convertingInProgress,
-        () {
-      super.convertingInProgress = value;
+  set videoMetadata(Video? value) {
+    _$videoMetadataAtom.reportWrite(value, super.videoMetadata, () {
+      super.videoMetadata = value;
     });
+  }
+
+  late final _$actionInProgressAtom =
+      Atom(name: '_MainStore.actionInProgress', context: context);
+
+  @override
+  bool get actionInProgress {
+    _$actionInProgressAtom.reportRead();
+    return super.actionInProgress;
+  }
+
+  @override
+  set actionInProgress(bool value) {
+    _$actionInProgressAtom.reportWrite(value, super.actionInProgress, () {
+      super.actionInProgress = value;
+    });
+  }
+
+  late final _$errorAtom = Atom(name: '_MainStore.error', context: context);
+
+  @override
+  String get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(String value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
+  late final _$getVideoMetadataAsyncAction =
+      AsyncAction('_MainStore.getVideoMetadata', context: context);
+
+  @override
+  Future getVideoMetadata() {
+    return _$getVideoMetadataAsyncAction.run(() => super.getVideoMetadata());
   }
 
   late final _$_MainStoreActionController =
@@ -60,7 +98,9 @@ mixin _$MainStore on _MainStore, Store {
   String toString() {
     return '''
 videoUrl: ${videoUrl},
-convertingInProgress: ${convertingInProgress}
+videoMetadata: ${videoMetadata},
+actionInProgress: ${actionInProgress},
+error: ${error}
     ''';
   }
 }

@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
         child: Stack(
           children: [
             AnimatedPositioned(
-              top: !store.actionInProgress
+              top: !store.actionInProgress && store.videoMetadata == null
                   ? size.height * 0.4
                   : size.height * 0.05,
               left: 0,
