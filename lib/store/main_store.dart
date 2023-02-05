@@ -59,6 +59,7 @@ abstract class _MainStore with Store {
   @action
   void clearInput() {
     videoUrl = '';
+    videoId = '';
     videoMetadata = null;
     actionInProgress = false;
     error = '';
@@ -67,18 +68,12 @@ abstract class _MainStore with Store {
   String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
     if (!url.contains("http") && (url.length == 11)) return url;
     if (trimWhitespaces) url = url.trim();
+    const youtubeUrlPattern =
+        r"^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be|music\.youtube\.com)\/watch\?v=([A-Za-z0-9_-]+).*$";
 
-    for (var exp in [
-      RegExp(
-          r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
-      RegExp(
-          r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
-      RegExp(r"^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$")
-    ]) {
-      Match? match = exp.firstMatch(url);
-      if (match != null && match.groupCount >= 1) return match.group(1);
-    }
+    RegExp exp = RegExp(youtubeUrlPattern);
+    RegExpMatch? match = exp.firstMatch(url);
 
-    return null;
+    return match != null ? match.group(4)! : null;
   }
 }

@@ -25,6 +25,21 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
+  late final _$videoIdAtom = Atom(name: '_MainStore.videoId', context: context);
+
+  @override
+  String get videoId {
+    _$videoIdAtom.reportRead();
+    return super.videoId;
+  }
+
+  @override
+  set videoId(String value) {
+    _$videoIdAtom.reportWrite(value, super.videoId, () {
+      super.videoId = value;
+    });
+  }
+
   late final _$videoMetadataAtom =
       Atom(name: '_MainStore.videoMetadata', context: context);
 
@@ -84,6 +99,17 @@ mixin _$MainStore on _MainStore, Store {
       ActionController(name: '_MainStore', context: context);
 
   @override
+  dynamic setVideoUrl(String enteredVideoUrl) {
+    final _$actionInfo = _$_MainStoreActionController.startAction(
+        name: '_MainStore.setVideoUrl');
+    try {
+      return super.setVideoUrl(enteredVideoUrl);
+    } finally {
+      _$_MainStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void convert() {
     final _$actionInfo =
         _$_MainStoreActionController.startAction(name: '_MainStore.convert');
@@ -95,9 +121,21 @@ mixin _$MainStore on _MainStore, Store {
   }
 
   @override
+  void clearInput() {
+    final _$actionInfo =
+        _$_MainStoreActionController.startAction(name: '_MainStore.clearInput');
+    try {
+      return super.clearInput();
+    } finally {
+      _$_MainStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 videoUrl: ${videoUrl},
+videoId: ${videoId},
 videoMetadata: ${videoMetadata},
 actionInProgress: ${actionInProgress},
 error: ${error}

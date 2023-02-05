@@ -9,9 +9,9 @@ final ThemeData customTheme = ThemeData(
     selectionColor: ThemeConstants.secondaryColor,
   ),
   textTheme: const TextTheme(
-    bodyLarge: ThemeConstants.whiteTextStyle,
-    bodyMedium: ThemeConstants.whiteTextStyle,
-    labelLarge: ThemeConstants.whiteTextStyle,
+    bodyLarge: ThemeConstants.mainTextStyle,
+    bodyMedium: ThemeConstants.mainTextStyle,
+    labelLarge: ThemeConstants.mainTextStyle,
   ),
   inputDecorationTheme: const InputDecorationTheme(
     filled: true,

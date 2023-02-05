@@ -7,8 +7,9 @@ class DownloadService {
       return false;
     }
 
-    final RegExp pattern = RegExp(
-        r'^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$');
+    const String youtubeRegex =
+        r"^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be|music\.youtube\.com)\/watch\?v=[A-Za-z0-9_-]+.*$";
+    final RegExp pattern = RegExp(youtubeRegex);
     final bool match = pattern.hasMatch(videoUrl);
 
     return match;
