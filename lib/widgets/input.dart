@@ -61,7 +61,7 @@ class Input extends StatelessWidget {
             ),
           ),
         ),
-        onChanged: (String value) => {store.videoUrl = value},
+        onChanged: (String value) => {store.setVideoUrl(value)},
       ),
     );
   }

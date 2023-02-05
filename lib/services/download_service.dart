@@ -3,7 +3,15 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 class DownloadService {
   /// Check if youtube or youtube video url is valid.
   bool checkVideoUrl(String videoUrl) {
-    return Uri.parse(videoUrl).host.isNotEmpty;
+    if (videoUrl.isEmpty) {
+      return false;
+    }
+
+    final RegExp pattern = RegExp(
+        r'^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$');
+    final bool match = pattern.hasMatch(videoUrl);
+
+    return match;
   }
 
   /// Gets video metadata.

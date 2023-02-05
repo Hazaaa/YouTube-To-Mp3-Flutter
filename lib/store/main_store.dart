@@ -18,6 +18,9 @@ abstract class _MainStore with Store {
   String videoUrl = '';
 
   @observable
+  String videoId = '';
+
+  @observable
   Video? videoMetadata;
 
   @observable
@@ -25,6 +28,17 @@ abstract class _MainStore with Store {
 
   @observable
   String error = '';
+
+  @action
+  setVideoUrl(String enteredVideoUrl) {
+    if (!_downloadService.checkVideoUrl(enteredVideoUrl)) {
+      error = 'Provided Video URL is not valid! Please check it and try again!';
+    } else {
+      videoUrl = enteredVideoUrl;
+      videoId = convertUrlToId(enteredVideoUrl)!;
+      error = '';
+    }
+  }
 
   @action
   getVideoMetadata() async {
@@ -48,5 +62,23 @@ abstract class _MainStore with Store {
     videoMetadata = null;
     actionInProgress = false;
     error = '';
+  }
+
+  String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
+    if (!url.contains("http") && (url.length == 11)) return url;
+    if (trimWhitespaces) url = url.trim();
+
+    for (var exp in [
+      RegExp(
+          r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
+      RegExp(
+          r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
+      RegExp(r"^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$")
+    ]) {
+      Match? match = exp.firstMatch(url);
+      if (match != null && match.groupCount >= 1) return match.group(1);
+    }
+
+    return null;
   }
 }
