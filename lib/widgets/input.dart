@@ -35,33 +35,13 @@ class Input extends StatelessWidget {
                   },
                 )
               : null,
-          suffixIcon: Container(
-            height: 46,
-            margin: const EdgeInsets.only(right: 1),
-            padding: const EdgeInsets.only(right: 12, left: 10),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(35),
-                bottomRight: Radius.circular(35),
-              ),
-              border: Border.all(
-                  width: 0.5, color: ThemeConstants.inputBorderColor),
-              color: ThemeConstants.secondaryColor,
-            ),
-            child: IconButton(
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
-              icon: const Icon(Icons.download),
-              tooltip: 'Get video metadata',
-              onPressed: () {
-                if (store.videoUrl.isNotEmpty) {
-                  store.getVideoMetadata();
-                }
-              },
-            ),
-          ),
         ),
-        onChanged: (String value) => {store.setVideoUrl(value)},
+        onChanged: (String value) {
+          store.setVideoUrl(value);
+          if (store.error.isEmpty) {
+            store.getVideoMetadata();
+          }
+        },
       ),
     );
   }
