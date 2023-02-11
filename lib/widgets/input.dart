@@ -14,7 +14,8 @@ class Input extends StatelessWidget {
 
     return Observer(
       builder: (_) => TextField(
-        enabled: !store.actionInProgress,
+        enabled: !store.videoMetadataDownloadingInProgress &&
+            !store.convertingInProgress,
         controller: inputTextController,
         style: const TextStyle(
             color: ThemeConstants.inputTextColor,

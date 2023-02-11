@@ -20,7 +20,7 @@ class VideoDetails extends StatelessWidget {
             style: ThemeConstants.detailNameTextStyle,
           ),
           SizedBox(
-            width: 300,
+            width: 250,
             child: Text(
               text ?? "/",
               maxLines: 1,

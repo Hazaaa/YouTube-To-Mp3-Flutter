@@ -56,19 +56,37 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  late final _$actionInProgressAtom =
-      Atom(name: '_MainStore.actionInProgress', context: context);
+  late final _$videoMetadataDownloadingInProgressAtom = Atom(
+      name: '_MainStore.videoMetadataDownloadingInProgress', context: context);
 
   @override
-  bool get actionInProgress {
-    _$actionInProgressAtom.reportRead();
-    return super.actionInProgress;
+  bool get videoMetadataDownloadingInProgress {
+    _$videoMetadataDownloadingInProgressAtom.reportRead();
+    return super.videoMetadataDownloadingInProgress;
   }
 
   @override
-  set actionInProgress(bool value) {
-    _$actionInProgressAtom.reportWrite(value, super.actionInProgress, () {
-      super.actionInProgress = value;
+  set videoMetadataDownloadingInProgress(bool value) {
+    _$videoMetadataDownloadingInProgressAtom
+        .reportWrite(value, super.videoMetadataDownloadingInProgress, () {
+      super.videoMetadataDownloadingInProgress = value;
+    });
+  }
+
+  late final _$convertingInProgressAtom =
+      Atom(name: '_MainStore.convertingInProgress', context: context);
+
+  @override
+  bool get convertingInProgress {
+    _$convertingInProgressAtom.reportRead();
+    return super.convertingInProgress;
+  }
+
+  @override
+  set convertingInProgress(bool value) {
+    _$convertingInProgressAtom.reportWrite(value, super.convertingInProgress,
+        () {
+      super.convertingInProgress = value;
     });
   }
 
@@ -87,12 +105,52 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
+  late final _$savePathAtom =
+      Atom(name: '_MainStore.savePath', context: context);
+
+  @override
+  String get savePath {
+    _$savePathAtom.reportRead();
+    return super.savePath;
+  }
+
+  @override
+  set savePath(String value) {
+    _$savePathAtom.reportWrite(value, super.savePath, () {
+      super.savePath = value;
+    });
+  }
+
+  late final _$saveVideoAlsoAtom =
+      Atom(name: '_MainStore.saveVideoAlso', context: context);
+
+  @override
+  bool get saveVideoAlso {
+    _$saveVideoAlsoAtom.reportRead();
+    return super.saveVideoAlso;
+  }
+
+  @override
+  set saveVideoAlso(bool value) {
+    _$saveVideoAlsoAtom.reportWrite(value, super.saveVideoAlso, () {
+      super.saveVideoAlso = value;
+    });
+  }
+
   late final _$getVideoMetadataAsyncAction =
       AsyncAction('_MainStore.getVideoMetadata', context: context);
 
   @override
   Future getVideoMetadata() {
     return _$getVideoMetadataAsyncAction.run(() => super.getVideoMetadata());
+  }
+
+  late final _$convertAsyncAction =
+      AsyncAction('_MainStore.convert', context: context);
+
+  @override
+  Future<void> convert() {
+    return _$convertAsyncAction.run(() => super.convert());
   }
 
   late final _$_MainStoreActionController =
@@ -104,17 +162,6 @@ mixin _$MainStore on _MainStore, Store {
         name: '_MainStore.setVideoUrl');
     try {
       return super.setVideoUrl(enteredVideoUrl);
-    } finally {
-      _$_MainStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void convert() {
-    final _$actionInfo =
-        _$_MainStoreActionController.startAction(name: '_MainStore.convert');
-    try {
-      return super.convert();
     } finally {
       _$_MainStoreActionController.endAction(_$actionInfo);
     }
@@ -137,8 +184,11 @@ mixin _$MainStore on _MainStore, Store {
 videoUrl: ${videoUrl},
 videoId: ${videoId},
 videoMetadata: ${videoMetadata},
-actionInProgress: ${actionInProgress},
-error: ${error}
+videoMetadataDownloadingInProgress: ${videoMetadataDownloadingInProgress},
+convertingInProgress: ${convertingInProgress},
+error: ${error},
+savePath: ${savePath},
+saveVideoAlso: ${saveVideoAlso}
     ''';
   }
 }

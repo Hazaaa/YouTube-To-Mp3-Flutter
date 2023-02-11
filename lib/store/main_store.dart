@@ -1,4 +1,5 @@
 import 'package:mobx/mobx.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_to_mp3_v2/services/download_service.dart';
 
@@ -24,10 +25,19 @@ abstract class _MainStore with Store {
   Video? videoMetadata;
 
   @observable
-  bool actionInProgress = false;
+  bool videoMetadataDownloadingInProgress = false;
+
+  @observable
+  bool convertingInProgress = false;
 
   @observable
   String error = '';
+
+  @observable
+  String savePath = '';
+
+  @observable
+  bool saveVideoAlso = false;
 
   @action
   setVideoUrl(String enteredVideoUrl) {
@@ -42,18 +52,26 @@ abstract class _MainStore with Store {
 
   @action
   getVideoMetadata() async {
-    actionInProgress = true;
+    videoMetadataDownloadingInProgress = true;
     if (!_downloadService.checkVideoUrl(videoUrl)) {
       error = 'Provided Video URL is not valid! Please check it and try again!';
     } else {
       videoMetadata = await _downloadService.getVideoMetadata(videoUrl);
     }
-    actionInProgress = false;
+    videoMetadataDownloadingInProgress = false;
   }
 
   @action
-  void convert() {
-    actionInProgress = true;
+  Future<void> convert() async {
+    convertingInProgress = true;
+
+    // if (savePath.isEmpty) {
+    //   final documentsDirectory = await getApplicationDocumentsDirectory();
+
+    //   savePath = documentsDirectory.path;
+    // }
+
+    // _downloadService.convert(videoId, savePath);
   }
 
   @action
@@ -61,8 +79,11 @@ abstract class _MainStore with Store {
     videoUrl = '';
     videoId = '';
     videoMetadata = null;
-    actionInProgress = false;
+    videoMetadataDownloadingInProgress = false;
+    convertingInProgress = false;
     error = '';
+    savePath = '';
+    saveVideoAlso = false;
   }
 
   String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
