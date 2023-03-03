@@ -37,16 +37,19 @@ class VideoConfigurations extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.highlight_alt_rounded),
                 color: Colors.red,
+                disabledColor: ThemeConstants.thirdColor,
                 tooltip:
                     "Select save path where your audio will be saved.\n*Default path is 'Documents' folder",
-                onPressed: () async {
-                  String? selectedDirectory =
-                      await FilePicker.platform.getDirectoryPath();
+                onPressed: store.convertingInProgress
+                    ? null
+                    : () async {
+                        String? selectedDirectory =
+                            await FilePicker.platform.getDirectoryPath();
 
-                  if (selectedDirectory != null) {
-                    store.savePath = selectedDirectory;
-                  }
-                },
+                        if (selectedDirectory != null) {
+                          store.savePath = selectedDirectory;
+                        }
+                      },
               ),
               SizedBox(width: leftMargine),
               Text(
@@ -65,7 +68,7 @@ class VideoConfigurations extends StatelessWidget {
               SizedBox(width: leftMargine),
               Tooltip(
                 message:
-                    "Video is temporary saved just so audio is extracted.\nIf you want to keep the video too, check this checkbox.",
+                    "Video is temporary saved just to extract audio.\nIf you want to keep the video too, check this checkbox.",
                 child: Checkbox(
                     focusColor: Colors.white,
                     activeColor: Colors.red,
@@ -74,7 +77,9 @@ class VideoConfigurations extends StatelessWidget {
                     splashRadius: 0,
                     side: const BorderSide(color: Colors.white, width: 2),
                     value: store.saveVideoAlso,
-                    onChanged: (bool? value) => store.saveVideoAlso = value!),
+                    onChanged: store.convertingInProgress
+                        ? null
+                        : (bool? value) => store.saveVideoAlso = value!),
               ),
               SizedBox(width: leftMargine)
             ],
@@ -86,7 +91,14 @@ class VideoConfigurations extends StatelessWidget {
             children: [
               SizedBox(width: size.width * 0.17),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    disabledBackgroundColor: ThemeConstants.thirdColor),
+                onPressed: store.convertingInProgress
+                    ? null
+                    : () {
+                        store.convert();
+                      },
                 child: Padding(
                   padding: const EdgeInsets.only(
                       top: 8, bottom: 8, left: 0, right: 7),
@@ -98,17 +110,47 @@ class VideoConfigurations extends StatelessWidget {
                       Container(
                         margin: const EdgeInsets.only(left: 5, bottom: 2),
                         child: const Text("Convert"),
-                      )
+                      ),
                     ],
                   ),
                 ),
-                onPressed: () {
-                  store.convert();
-                },
               ),
             ],
           ),
-        )
+        ),
+        const SizedBox(height: 40.0),
+        Observer(
+          builder: (_) => Row(
+            children: [
+              SizedBox(width: size.width * 0.21),
+              AnimatedOpacity(
+                opacity: store.convertingInProgress ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 400),
+                child: const SizedBox(
+                  width: 70,
+                  height: 70,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 6.0,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20.0),
+        Observer(
+          builder: (_) => Row(
+            children: [
+              SizedBox(width: size.width * 0.17),
+              AnimatedOpacity(
+                opacity: store.currentConvertingStep.isNotEmpty ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 400),
+                child: Text(store.currentConvertingStep),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

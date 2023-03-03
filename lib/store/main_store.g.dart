@@ -137,6 +137,23 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
+  late final _$currentConvertingStepAtom =
+      Atom(name: '_MainStore.currentConvertingStep', context: context);
+
+  @override
+  String get currentConvertingStep {
+    _$currentConvertingStepAtom.reportRead();
+    return super.currentConvertingStep;
+  }
+
+  @override
+  set currentConvertingStep(String value) {
+    _$currentConvertingStepAtom.reportWrite(value, super.currentConvertingStep,
+        () {
+      super.currentConvertingStep = value;
+    });
+  }
+
   late final _$getVideoMetadataAsyncAction =
       AsyncAction('_MainStore.getVideoMetadata', context: context);
 
@@ -188,7 +205,8 @@ videoMetadataDownloadingInProgress: ${videoMetadataDownloadingInProgress},
 convertingInProgress: ${convertingInProgress},
 error: ${error},
 savePath: ${savePath},
-saveVideoAlso: ${saveVideoAlso}
+saveVideoAlso: ${saveVideoAlso},
+currentConvertingStep: ${currentConvertingStep}
     ''';
   }
 }

@@ -29,7 +29,7 @@ class DownloadService {
   }
 
   /// Converting video to mp3.
-  Future<void> convert(String videoId, String savePath) async {
+  Future<void> downloadVideo(String videoId, String savePath) async {
     final yt = YoutubeExplode();
 
     var manifest = await yt.videos.streamsClient.getManifest(videoId);

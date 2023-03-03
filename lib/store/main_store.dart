@@ -39,6 +39,9 @@ abstract class _MainStore with Store {
   @observable
   bool saveVideoAlso = false;
 
+  @observable
+  String currentConvertingStep = '';
+
   @action
   setVideoUrl(String enteredVideoUrl) {
     if (!_downloadService.checkVideoUrl(enteredVideoUrl)) {
@@ -65,13 +68,15 @@ abstract class _MainStore with Store {
   Future<void> convert() async {
     convertingInProgress = true;
 
-    // if (savePath.isEmpty) {
-    //   final documentsDirectory = await getApplicationDocumentsDirectory();
+    currentConvertingStep = 'Checking save path...';
+    if (savePath.isEmpty) {
+      final documentsDirectory = await getApplicationDocumentsDirectory();
 
-    //   savePath = documentsDirectory.path;
-    // }
+      savePath = documentsDirectory.path;
+    }
 
-    // _downloadService.convert(videoId, savePath);
+    currentConvertingStep = 'Downloading video...';
+    await _downloadService.downloadVideo(videoId, savePath);
   }
 
   @action
@@ -84,6 +89,7 @@ abstract class _MainStore with Store {
     error = '';
     savePath = '';
     saveVideoAlso = false;
+    currentConvertingStep = '';
   }
 
   String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
