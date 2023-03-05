@@ -208,11 +208,17 @@ class VideoConfigurations extends StatelessWidget {
       context: context,
       builder: (BuildContext buildContext) {
         return AlertDialog(
-          title: const Text('Did you forgot Ffmpeg?'),
+          title: const Text('Did you forgot Ffmpeg?',
+              style: ThemeConstants.mainTextStyle),
           content: const Text(
-              "To convert YouTube videos to mp3 we are using app called ffmpeg, and it seems that it's not installed on your machine.\nDo you want to install it?"),
+              "To convert YouTube videos to mp3 we are using app called ffmpeg, and it seems that it's not installed on your machine.\nDo you want to install it?",
+              style: ThemeConstants.mainTextStyle),
           actions: [
             TextButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateColor.resolveWith((states) => Colors.red),
+              ),
               onPressed: () {
                 store.convertingInProgress = true;
                 store.convertCurrentStep = 'Downloading ffmpeg...';
@@ -230,6 +236,10 @@ class VideoConfigurations extends StatelessWidget {
               child: const Text("Yes"),
             ),
             TextButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateColor.resolveWith((states) => Colors.red),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 store.convertingInProgress = false;
@@ -238,6 +248,7 @@ class VideoConfigurations extends StatelessWidget {
               child: const Text("No"),
             )
           ],
+          backgroundColor: ThemeConstants.secondaryColor,
         );
       },
     );
@@ -257,8 +268,9 @@ class VideoConfigurations extends StatelessWidget {
           actions: [
             TextButton(
               style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateColor.resolveWith((states) => Colors.red)),
+                backgroundColor:
+                    MaterialStateColor.resolveWith((states) => Colors.red),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 store.convertingInProgress = false;
