@@ -105,6 +105,9 @@ abstract class _MainStore with Store {
     await _downloadAndConvertServicesWrapper.convertService
         .convertMp4ToMp3(pathToMp4, mp3SvePath);
 
+    currentConvertingStep = 'Converting successfull!';
+    convertingInProgress = false;
+
     return '';
   }
 

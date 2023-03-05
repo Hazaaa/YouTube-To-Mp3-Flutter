@@ -14,17 +14,13 @@ class ConvertService {
     ];
 
     final process =
-        await Process.start('ffmpeg', ffmpegArguments, runInShell: true);
+        await Process.run('ffmpeg', ffmpegArguments, runInShell: true);
 
-    process.exitCode.then(
-      (value) async {
-        if (exitCode == -1) {
-          return;
-        }
-
-        // Removing temporary mp4 file.
-        await File(pathToMp4).delete();
-      },
-    );
+    if (process.exitCode == 0) {
+      // Removing temporary mp4 file.
+      await File(pathToMp4).delete();
+    } else {
+      print('Ffmpeg could not convert the Mp4 file to Mp3!');
+    }
   }
 }
