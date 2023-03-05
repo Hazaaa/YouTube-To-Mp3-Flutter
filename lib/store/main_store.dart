@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:youtube_to_mp3_v2/exceptions/missing_ffmpeg_exception.dart';
 import 'package:youtube_to_mp3_v2/services/download_and_convert_service_wrapper.dart';
 
 // Include generated file by MobX
@@ -85,7 +86,7 @@ abstract class _MainStore with Store {
     try {
       await Process.run('ffmpeg', ['-version'], runInShell: true);
     } on ProcessException catch (_) {
-      return 'Missing ffmpeg...';
+      throw MissingFfmpegException();
     }
 
     currentConvertingStep = 'Checking save path...';
