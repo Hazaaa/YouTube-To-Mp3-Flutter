@@ -6,7 +6,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_to_mp3_v2/exceptions/converting_exception.dart';
 import 'package:youtube_to_mp3_v2/exceptions/missing_ffmpeg_exception.dart';
-import 'package:youtube_to_mp3_v2/models/result.dart';
 import 'package:youtube_to_mp3_v2/store/main_store.dart';
 import 'package:youtube_to_mp3_v2/theme/theme_constants.dart';
 
