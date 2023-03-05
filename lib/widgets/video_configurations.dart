@@ -4,7 +4,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:youtube_to_mp3_v2/exceptions/converting_exception.dart';
 import 'package:youtube_to_mp3_v2/exceptions/missing_ffmpeg_exception.dart';
+import 'package:youtube_to_mp3_v2/models/result.dart';
 import 'package:youtube_to_mp3_v2/store/main_store.dart';
 import 'package:youtube_to_mp3_v2/theme/theme_constants.dart';
 
@@ -94,17 +96,31 @@ class VideoConfigurations extends StatelessWidget {
           SizedBox(width: screenWidth * 0.17),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                disabledBackgroundColor: ThemeConstants.thirdColor),
-            onPressed: store.convertingInProgress
-                ? null
-                : () {
-                    try {
-                      store.convert();
-                    } on MissingFfmpegException catch (_) {
+              backgroundColor: store.convertingInProgress
+                  ? ThemeConstants.thirdColor
+                  : Colors.red,
+            ),
+            onPressed: () {
+              if (store.convertingInProgress) {
+                return;
+              }
+
+              store.convert().then(
+                (result) {
+                  if (!result.succesfull) {
+                    if (result.exception is MissingFfmpegException) {
                       showMissingFfmpegDialog(context, store);
+                      return;
                     }
-                  },
+
+                    if (result.exception is ConvertingException) {
+                      showConvertingErrorDialog(
+                          context, store, result.exception.toString());
+                    }
+                  }
+                },
+              );
+            },
             child: Padding(
               padding:
                   const EdgeInsets.only(top: 8, bottom: 8, left: 0, right: 7),
@@ -131,17 +147,15 @@ class VideoConfigurations extends StatelessWidget {
     return Observer(
       builder: (_) => Row(
         children: [
-          SizedBox(width: screenWidth * 0.21),
-          AnimatedOpacity(
-            opacity: store.convertingInProgress ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 400),
-            child: const SizedBox(
-              width: 70,
-              height: 70,
-              child: CircularProgressIndicator(
-                strokeWidth: 6.0,
-                color: Colors.red,
-              ),
+          Container(
+            margin: EdgeInsets.only(left: screenWidth * 0.05),
+            width: screenWidth * 0.4,
+            height: 10,
+            child: LinearProgressIndicator(
+              value: store.convertProggressPrecentage,
+              backgroundColor: ThemeConstants.secondaryColor,
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                  ThemeConstants.errorColor),
             ),
           ),
         ],
@@ -153,11 +167,11 @@ class VideoConfigurations extends StatelessWidget {
     return Observer(
       builder: (_) => Row(
         children: [
-          SizedBox(width: screenWidth * 0.17),
+          SizedBox(width: screenWidth * 0.16),
           AnimatedOpacity(
-            opacity: store.currentConvertingStep.isNotEmpty ? 1.0 : 0.0,
+            opacity: store.convertCurrentStep.isNotEmpty ? 1.0 : 0.0,
             duration: const Duration(milliseconds: 400),
-            child: Text(store.currentConvertingStep),
+            child: Text(store.convertCurrentStep),
           ),
         ],
       ),
@@ -191,6 +205,7 @@ class VideoConfigurations extends StatelessWidget {
 
   void showMissingFfmpegDialog(BuildContext context, MainStore store) {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext buildContext) {
         return AlertDialog(
@@ -201,12 +216,12 @@ class VideoConfigurations extends StatelessWidget {
             TextButton(
               onPressed: () {
                 store.convertingInProgress = true;
-                store.currentConvertingStep = 'Downloading ffmpeg...';
+                store.convertCurrentStep = 'Downloading ffmpeg...';
                 Process.run('winget', ['install', 'ffmpeg'], runInShell: true)
                     .then(
                   (process) {
                     store.convertingInProgress = false;
-                    store.currentConvertingStep = process.exitCode == 0
+                    store.convertCurrentStep = process.exitCode == 0
                         ? ''
                         : 'Error happend while trying to install ffmpeg...';
                     Navigator.of(context).pop();
@@ -219,11 +234,42 @@ class VideoConfigurations extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop();
                 store.convertingInProgress = false;
-                store.currentConvertingStep = 'Missing ffmpeg!';
+                store.convertCurrentStep = 'Missing ffmpeg!';
               },
               child: const Text("No"),
             )
           ],
+        );
+      },
+    );
+  }
+
+  void showConvertingErrorDialog(
+      BuildContext context, MainStore store, String convertErrorMessage) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Converting error :(",
+              style: ThemeConstants.mainTextStyle),
+          content:
+              Text(convertErrorMessage, style: ThemeConstants.mainTextStyle),
+          actions: [
+            TextButton(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateColor.resolveWith((states) => Colors.red)),
+              onPressed: () {
+                Navigator.of(context).pop();
+                store.convertingInProgress = false;
+                store.convertCurrentStep = '';
+                store.convertProggressPrecentage = 0.0;
+              },
+              child: const Text("Ok", style: ThemeConstants.mainTextStyle),
+            )
+          ],
+          backgroundColor: ThemeConstants.secondaryColor,
         );
       },
     );

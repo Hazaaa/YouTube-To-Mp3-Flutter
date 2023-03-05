@@ -137,20 +137,36 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  late final _$currentConvertingStepAtom =
-      Atom(name: '_MainStore.currentConvertingStep', context: context);
+  late final _$convertProggressPrecentageAtom =
+      Atom(name: '_MainStore.convertProggressPrecentage', context: context);
 
   @override
-  String get currentConvertingStep {
-    _$currentConvertingStepAtom.reportRead();
-    return super.currentConvertingStep;
+  double get convertProggressPrecentage {
+    _$convertProggressPrecentageAtom.reportRead();
+    return super.convertProggressPrecentage;
   }
 
   @override
-  set currentConvertingStep(String value) {
-    _$currentConvertingStepAtom.reportWrite(value, super.currentConvertingStep,
-        () {
-      super.currentConvertingStep = value;
+  set convertProggressPrecentage(double value) {
+    _$convertProggressPrecentageAtom
+        .reportWrite(value, super.convertProggressPrecentage, () {
+      super.convertProggressPrecentage = value;
+    });
+  }
+
+  late final _$convertCurrentStepAtom =
+      Atom(name: '_MainStore.convertCurrentStep', context: context);
+
+  @override
+  String get convertCurrentStep {
+    _$convertCurrentStepAtom.reportRead();
+    return super.convertCurrentStep;
+  }
+
+  @override
+  set convertCurrentStep(String value) {
+    _$convertCurrentStepAtom.reportWrite(value, super.convertCurrentStep, () {
+      super.convertCurrentStep = value;
     });
   }
 
@@ -166,7 +182,7 @@ mixin _$MainStore on _MainStore, Store {
       AsyncAction('_MainStore.convert', context: context);
 
   @override
-  Future<String> convert() {
+  Future<Result<dynamic>> convert() {
     return _$convertAsyncAction.run(() => super.convert());
   }
 
@@ -206,7 +222,8 @@ convertingInProgress: ${convertingInProgress},
 error: ${error},
 savePath: ${savePath},
 saveVideoAlso: ${saveVideoAlso},
-currentConvertingStep: ${currentConvertingStep}
+convertProggressPrecentage: ${convertProggressPrecentage},
+convertCurrentStep: ${convertCurrentStep}
     ''';
   }
 }

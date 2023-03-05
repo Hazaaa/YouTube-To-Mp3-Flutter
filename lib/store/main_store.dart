@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:youtube_to_mp3_v2/exceptions/converting_exception.dart';
 import 'package:youtube_to_mp3_v2/exceptions/missing_ffmpeg_exception.dart';
+import 'package:youtube_to_mp3_v2/models/result.dart';
 import 'package:youtube_to_mp3_v2/services/download_and_convert_service_wrapper.dart';
 
 // Include generated file by MobX
@@ -43,7 +45,10 @@ abstract class _MainStore with Store {
   bool saveVideoAlso = false;
 
   @observable
-  String currentConvertingStep = '';
+  double convertProggressPrecentage = 0.0;
+
+  @observable
+  String convertCurrentStep = '';
 
   @action
   setVideoUrl(String enteredVideoUrl) {
@@ -55,11 +60,12 @@ abstract class _MainStore with Store {
 
     if (!_downloadAndConvertServicesWrapper.downloadService
         .checkVideoUrl(enteredVideoUrl)) {
-      error = 'Provided Video URL is not valid! Please check it and try again!';
+      _updateConvertingErrorText(
+          'Provided Video URL is not valid! Please check it and try again!');
     } else {
       videoUrl = enteredVideoUrl;
       videoId = convertUrlToId(enteredVideoUrl)!;
-      error = '';
+      _updateConvertingErrorText('');
     }
   }
 
@@ -68,7 +74,8 @@ abstract class _MainStore with Store {
     videoMetadataDownloadingInProgress = true;
     if (!_downloadAndConvertServicesWrapper.downloadService
         .checkVideoUrl(videoUrl)) {
-      error = 'Provided Video URL is not valid! Please check it and try again!';
+      _updateConvertingErrorText(
+          'Provided Video URL is not valid! Please check it and try again!');
     } else {
       videoMetadata = await _downloadAndConvertServicesWrapper.downloadService
           .getVideoMetadata(videoUrl);
@@ -77,39 +84,54 @@ abstract class _MainStore with Store {
   }
 
   @action
-  Future<String> convert() async {
+  Future<Result> convert() async {
     convertingInProgress = true;
     final documentsDirectory = await getApplicationDocumentsDirectory();
 
-    currentConvertingStep = 'Checking ffmpeg...';
+    _updateConvertingCurrentProcessText('Checking ffmpeg...');
 
     try {
       await Process.run('ffmpeg', ['-version'], runInShell: true);
     } on ProcessException catch (_) {
-      throw MissingFfmpegException();
+      return Result(
+        succesfull: false,
+        exception: MissingFfmpegException(),
+      );
     }
 
-    currentConvertingStep = 'Checking save path...';
+    _updateConvertingProcessPrecentage(0.05);
+
+    _updateConvertingCurrentProcessText('Checking save path...');
     if (savePath.isEmpty) {
       savePath = documentsDirectory.path;
     }
+
+    _updateConvertingProcessPrecentage(0.1);
 
     final fileBaseSavePath = '$savePath\\${videoMetadata?.title}';
     final mp4SavePath = '$fileBaseSavePath.mp4';
     final mp3SvePath = '$fileBaseSavePath.mp3';
 
-    currentConvertingStep = 'Downloading video...';
-    final pathToMp4 = await _downloadAndConvertServicesWrapper.downloadService
-        .downloadVideo(videoId, mp4SavePath);
+    try {
+      _updateConvertingCurrentProcessText('Downloading video...');
+      final pathToMp4 = await _downloadAndConvertServicesWrapper.downloadService
+          .downloadVideo(videoId, mp4SavePath);
 
-    currentConvertingStep = 'Converting video...';
-    await _downloadAndConvertServicesWrapper.convertService
-        .convertMp4ToMp3(pathToMp4, mp3SvePath);
+      _updateConvertingProcessPrecentage(0.5);
 
-    currentConvertingStep = 'Converting successfull!';
+      _updateConvertingCurrentProcessText('Converting video...');
+      await _downloadAndConvertServicesWrapper.convertService
+          .convertMp4ToMp3(pathToMp4, mp3SvePath);
+    } on ConvertingException catch (ex) {
+      return Result(succesfull: false, exception: ex);
+    }
+
+    _updateConvertingProcessPrecentage(1);
+
+    _updateConvertingCurrentProcessText('Converting successfull!');
     convertingInProgress = false;
 
-    return '';
+    return Result(succesfull: true);
   }
 
   @action
@@ -122,7 +144,8 @@ abstract class _MainStore with Store {
     error = '';
     savePath = '';
     saveVideoAlso = false;
-    currentConvertingStep = '';
+    convertCurrentStep = '';
+    convertProggressPrecentage = 0.0;
   }
 
   String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
@@ -135,5 +158,17 @@ abstract class _MainStore with Store {
     RegExpMatch? match = exp.firstMatch(url);
 
     return match != null ? match.group(4)! : null;
+  }
+
+  void _updateConvertingCurrentProcessText(String currentStep) {
+    convertCurrentStep = currentStep;
+  }
+
+  void _updateConvertingProcessPrecentage(double precentage) {
+    convertProggressPrecentage = precentage;
+  }
+
+  void _updateConvertingErrorText(String errorText) {
+    error = errorText;
   }
 }

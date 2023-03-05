@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:youtube_to_mp3_v2/exceptions/converting_exception.dart';
+
 class ConvertService {
   Future<void> convertMp4ToMp3(String pathToMp4, String mp3SavePath) async {
     final ffmpegArguments = [
@@ -20,7 +22,7 @@ class ConvertService {
       // Removing temporary mp4 file.
       await File(pathToMp4).delete();
     } else {
-      print('Ffmpeg could not convert the Mp4 file to Mp3!');
+      throw ConvertingException();
     }
   }
 }
