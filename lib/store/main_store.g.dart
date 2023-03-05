@@ -166,7 +166,7 @@ mixin _$MainStore on _MainStore, Store {
       AsyncAction('_MainStore.convert', context: context);
 
   @override
-  Future<void> convert() {
+  Future<String> convert() {
     return _$convertAsyncAction.run(() => super.convert());
   }
 

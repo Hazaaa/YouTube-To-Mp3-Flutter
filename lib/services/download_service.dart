@@ -29,7 +29,7 @@ class DownloadService {
   }
 
   /// Converting video to mp3.
-  Future<void> downloadVideo(String videoId, String savePath) async {
+  Future<String> downloadVideo(String videoId, String savePath) async {
     final yt = YoutubeExplode();
 
     var manifest = await yt.videos.streamsClient.getManifest(videoId);
@@ -40,6 +40,7 @@ class DownloadService {
 
     // Open a file for writing.
     var file = File(savePath);
+
     var fileStream = file.openWrite();
 
     // Pipe all the content of the stream into the file.
@@ -49,5 +50,11 @@ class DownloadService {
     await fileStream.flush();
     await fileStream.close();
     yt.close();
+
+    if (await file.exists()) {
+      return file.path;
+    } else {
+      return '';
+    }
   }
 }

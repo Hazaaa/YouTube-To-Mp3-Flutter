@@ -1,7 +1,9 @@
+import 'dart:io';
+
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-import 'package:youtube_to_mp3_v2/services/download_service.dart';
+import 'package:youtube_to_mp3_v2/services/download_and_convert_service_wrapper.dart';
 
 // Include generated file by MobX
 part 'main_store.g.dart';
@@ -11,9 +13,9 @@ class MainStore = _MainStore with _$MainStore;
 
 // The store class
 abstract class _MainStore with Store {
-  _MainStore(this._downloadService);
+  _MainStore(this._downloadAndConvertServicesWrapper);
 
-  final DownloadService _downloadService;
+  final DownloadAndConvertServicesWrapper _downloadAndConvertServicesWrapper;
 
   @observable
   String videoUrl = '';
@@ -44,7 +46,14 @@ abstract class _MainStore with Store {
 
   @action
   setVideoUrl(String enteredVideoUrl) {
-    if (!_downloadService.checkVideoUrl(enteredVideoUrl)) {
+    if (enteredVideoUrl.isEmpty) {
+      error = '';
+      videoUrl = '';
+      return;
+    }
+
+    if (!_downloadAndConvertServicesWrapper.downloadService
+        .checkVideoUrl(enteredVideoUrl)) {
       error = 'Provided Video URL is not valid! Please check it and try again!';
     } else {
       videoUrl = enteredVideoUrl;
@@ -56,27 +65,47 @@ abstract class _MainStore with Store {
   @action
   getVideoMetadata() async {
     videoMetadataDownloadingInProgress = true;
-    if (!_downloadService.checkVideoUrl(videoUrl)) {
+    if (!_downloadAndConvertServicesWrapper.downloadService
+        .checkVideoUrl(videoUrl)) {
       error = 'Provided Video URL is not valid! Please check it and try again!';
     } else {
-      videoMetadata = await _downloadService.getVideoMetadata(videoUrl);
+      videoMetadata = await _downloadAndConvertServicesWrapper.downloadService
+          .getVideoMetadata(videoUrl);
     }
     videoMetadataDownloadingInProgress = false;
   }
 
   @action
-  Future<void> convert() async {
+  Future<String> convert() async {
     convertingInProgress = true;
+    final documentsDirectory = await getApplicationDocumentsDirectory();
+
+    currentConvertingStep = 'Checking ffmpeg...';
+
+    try {
+      await Process.run('ffmpeg', ['-version'], runInShell: true);
+    } on ProcessException catch (_) {
+      return 'Missing ffmpeg...';
+    }
 
     currentConvertingStep = 'Checking save path...';
     if (savePath.isEmpty) {
-      final documentsDirectory = await getApplicationDocumentsDirectory();
-
       savePath = documentsDirectory.path;
     }
 
+    final fileBaseSavePath = '$savePath\\${videoMetadata?.title}';
+    final mp4SavePath = '$fileBaseSavePath.mp4';
+    final mp3SvePath = '$fileBaseSavePath.mp3';
+
     currentConvertingStep = 'Downloading video...';
-    await _downloadService.downloadVideo(videoId, savePath);
+    final pathToMp4 = await _downloadAndConvertServicesWrapper.downloadService
+        .downloadVideo(videoId, mp4SavePath);
+
+    currentConvertingStep = 'Converting video...';
+    await _downloadAndConvertServicesWrapper.convertService
+        .convertMp4ToMp3(pathToMp4, mp3SvePath);
+
+    return '';
   }
 
   @action

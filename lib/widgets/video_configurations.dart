@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -97,7 +99,51 @@ class VideoConfigurations extends StatelessWidget {
                 onPressed: store.convertingInProgress
                     ? null
                     : () {
-                        store.convert();
+                        store.convert().then((value) {
+                          if (value.contains('ffmpeg')) {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext buildContext) {
+                                  return AlertDialog(
+                                    title: const Text('Did you forgot Ffmpeg?'),
+                                    content: const Text(
+                                        "To convert YouTube videos to mp3 we are using app called ffmpeg, and it seems that it's not installed on your machine.\nDo you want to install it?"),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            store.convertingInProgress = true;
+                                            store.currentConvertingStep =
+                                                'Downloading ffmpeg...';
+                                            Process.start('winget',
+                                                    ['install', 'ffmpeg'],
+                                                    runInShell: true)
+                                                .then(
+                                              (process) {
+                                                process.exitCode.then((value) {
+                                                  store.convertingInProgress =
+                                                      false;
+                                                  store.currentConvertingStep =
+                                                      '';
+                                                  Navigator.of(context).pop();
+                                                });
+                                              },
+                                            );
+                                          },
+                                          child: const Text("Yes")),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          store.convertingInProgress = false;
+                                          store.currentConvertingStep =
+                                              'Missing ffmpeg!';
+                                        },
+                                        child: const Text("No"),
+                                      )
+                                    ],
+                                  );
+                                });
+                          }
+                        });
                       },
                 child: Padding(
                   padding: const EdgeInsets.only(

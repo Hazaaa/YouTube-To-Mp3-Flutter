@@ -2,6 +2,8 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_to_mp3_v2/pages/home.dart';
+import 'package:youtube_to_mp3_v2/services/convert_service.dart';
+import 'package:youtube_to_mp3_v2/services/download_and_convert_service_wrapper.dart';
 import 'package:youtube_to_mp3_v2/services/download_service.dart';
 import 'package:youtube_to_mp3_v2/store/main_store.dart';
 import 'package:youtube_to_mp3_v2/theme/theme.dart';
@@ -30,12 +32,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<DownloadService>(
-          create: (_) => DownloadService(),
+        Provider<DownloadAndConvertServicesWrapper>(
+          create: (_) => DownloadAndConvertServicesWrapper(
+            convertService: ConvertService(),
+            downloadService: DownloadService(),
+          ),
         ),
-        ProxyProvider<DownloadService, MainStore>(
-          update: (_, downloadService, __) => MainStore(downloadService),
-        )
+        ProxyProvider<DownloadAndConvertServicesWrapper, MainStore>(
+          update: (_, downloadAndConvertServicesWrapper, __) =>
+              MainStore(downloadAndConvertServicesWrapper),
+        ),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
