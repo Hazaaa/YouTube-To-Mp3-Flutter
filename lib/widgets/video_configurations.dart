@@ -8,6 +8,7 @@ import 'package:youtube_to_mp3_v2/exceptions/converting_exception.dart';
 import 'package:youtube_to_mp3_v2/exceptions/missing_ffmpeg_exception.dart';
 import 'package:youtube_to_mp3_v2/store/main_store.dart';
 import 'package:youtube_to_mp3_v2/theme/theme_constants.dart';
+import 'package:youtube_to_mp3_v2/widgets/mp3_tag_dialog.dart';
 
 class VideoConfigurations extends StatelessWidget {
   const VideoConfigurations({Key? key}) : super(key: key);
@@ -25,6 +26,8 @@ class VideoConfigurations extends StatelessWidget {
         configurationLabelWidget(size.width),
         const SizedBox(height: 20.0),
         pathSelectorWidget(store, leftMargine),
+        const SizedBox(height: 20.0),
+        mp3TagWidget(context, store, leftMargine),
         const SizedBox(height: 20.0),
         saveVideoCheckboxWidget(store, leftMargine),
         const SizedBox(height: 20.0),
@@ -78,6 +81,28 @@ class VideoConfigurations extends StatelessWidget {
           Text(
             store.savePath.isEmpty ? "" : store.savePath,
             style: const TextStyle(fontSize: 12),
+          )
+        ],
+      ),
+    );
+  }
+
+  Observer mp3TagWidget(
+      BuildContext context, MainStore store, double leftMargine) {
+    return Observer(
+      builder: (_) => Row(
+        children: [
+          SizedBox(width: leftMargine),
+          const Text("Tags:"),
+          SizedBox(width: leftMargine),
+          IconButton(
+            icon: const Icon(Icons.tag),
+            color: Colors.red,
+            disabledColor: ThemeConstants.thirdColor,
+            tooltip: "Add tags to converted Mp3 file.",
+            onPressed: store.convertingInProgress
+                ? null
+                : () => _showMp3TagDialog(context, store),
           )
         ],
       ),
@@ -199,6 +224,15 @@ class VideoConfigurations extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showMp3TagDialog(BuildContext context, MainStore store) {
+    showDialog(
+      context: context,
+      builder: (BuildContext buildContext) {
+        return const Mp3TagDialog();
+      },
     );
   }
 

@@ -19,6 +19,7 @@ final ThemeData customTheme = ThemeData(
     focusColor: ThemeConstants.secondaryColor,
     contentPadding: ThemeConstants.inputContentPadding,
     iconColor: ThemeConstants.iconColor,
+    labelStyle: TextStyle(color: ThemeConstants.errorColor),
     hintStyle: TextStyle(color: ThemeConstants.inputHintTextColor),
     suffixIconColor: ThemeConstants.iconColor,
     prefixIconColor: ThemeConstants.thirdColor,

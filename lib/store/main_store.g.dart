@@ -170,6 +170,21 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
+  late final _$tagAtom = Atom(name: '_MainStore.tag', context: context);
+
+  @override
+  Mp3Tag? get tag {
+    _$tagAtom.reportRead();
+    return super.tag;
+  }
+
+  @override
+  set tag(Mp3Tag? value) {
+    _$tagAtom.reportWrite(value, super.tag, () {
+      super.tag = value;
+    });
+  }
+
   late final _$getVideoMetadataAsyncAction =
       AsyncAction('_MainStore.getVideoMetadata', context: context);
 
@@ -223,7 +238,8 @@ error: ${error},
 savePath: ${savePath},
 saveVideoAlso: ${saveVideoAlso},
 convertProggressPrecentage: ${convertProggressPrecentage},
-convertCurrentStep: ${convertCurrentStep}
+convertCurrentStep: ${convertCurrentStep},
+tag: ${tag}
     ''';
   }
 }

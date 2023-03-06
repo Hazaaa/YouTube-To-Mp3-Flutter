@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_to_mp3_v2/exceptions/converting_exception.dart';
 import 'package:youtube_to_mp3_v2/exceptions/missing_ffmpeg_exception.dart';
+import 'package:youtube_to_mp3_v2/models/mp3_tag.dart';
 import 'package:youtube_to_mp3_v2/models/result.dart';
 import 'package:youtube_to_mp3_v2/services/download_and_convert_service_wrapper.dart';
 
@@ -49,6 +50,9 @@ abstract class _MainStore with Store {
 
   @observable
   String convertCurrentStep = '';
+
+  @observable
+  Mp3Tag? tag;
 
   @action
   setVideoUrl(String enteredVideoUrl) {
@@ -146,6 +150,7 @@ abstract class _MainStore with Store {
     saveVideoAlso = false;
     convertCurrentStep = '';
     convertProggressPrecentage = 0.0;
+    tag = null;
   }
 
   String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
