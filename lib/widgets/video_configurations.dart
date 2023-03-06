@@ -12,6 +12,31 @@ import 'package:youtube_to_mp3_v2/theme/theme_constants.dart';
 class VideoConfigurations extends StatelessWidget {
   const VideoConfigurations({Key? key}) : super(key: key);
 
+  @override
+  Widget build(BuildContext context) {
+    final store = Provider.of<MainStore>(context);
+    final size = MediaQuery.of(context).size;
+
+    final leftMargine = size.width * 0.02;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        configurationLabelWidget(size.width),
+        const SizedBox(height: 20.0),
+        pathSelectorWidget(store, leftMargine),
+        const SizedBox(height: 20.0),
+        saveVideoCheckboxWidget(store, leftMargine),
+        const SizedBox(height: 20.0),
+        convertButtonWidget(context, store, size.width),
+        const SizedBox(height: 40.0),
+        convertingProgressIndicatorWidget(store, size.width),
+        const SizedBox(height: 20.0),
+        convertingCurrentStepWidget(store, size.width)
+      ],
+    );
+  }
+
   /// Returning row with configuration label.
   Row configurationLabelWidget(double screenWidth) {
     return Row(
@@ -108,12 +133,12 @@ class VideoConfigurations extends StatelessWidget {
                 (result) {
                   if (!result.succesfull) {
                     if (result.exception is MissingFfmpegException) {
-                      showMissingFfmpegDialog(context, store);
+                      _showMissingFfmpegDialog(context, store);
                       return;
                     }
 
                     if (result.exception is ConvertingException) {
-                      showConvertingErrorDialog(
+                      _showConvertingErrorDialog(
                           context, store, result.exception.toString());
                     }
                   }
@@ -177,32 +202,7 @@ class VideoConfigurations extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final store = Provider.of<MainStore>(context);
-    final size = MediaQuery.of(context).size;
-
-    final leftMargine = size.width * 0.02;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        configurationLabelWidget(size.width),
-        const SizedBox(height: 20.0),
-        pathSelectorWidget(store, leftMargine),
-        const SizedBox(height: 20.0),
-        saveVideoCheckboxWidget(store, leftMargine),
-        const SizedBox(height: 20.0),
-        convertButtonWidget(context, store, size.width),
-        const SizedBox(height: 40.0),
-        convertingProgressIndicatorWidget(store, size.width),
-        const SizedBox(height: 20.0),
-        convertingCurrentStepWidget(store, size.width)
-      ],
-    );
-  }
-
-  void showMissingFfmpegDialog(BuildContext context, MainStore store) {
+  void _showMissingFfmpegDialog(BuildContext context, MainStore store) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -254,7 +254,7 @@ class VideoConfigurations extends StatelessWidget {
     );
   }
 
-  void showConvertingErrorDialog(
+  void _showConvertingErrorDialog(
       BuildContext context, MainStore store, String convertErrorMessage) {
     showDialog(
       barrierDismissible: false,
