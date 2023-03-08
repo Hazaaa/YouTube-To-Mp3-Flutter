@@ -61,22 +61,22 @@ class VideoConfigurations extends StatelessWidget {
           SizedBox(width: leftMargine),
           const Text("Save path:"),
           SizedBox(width: leftMargine),
-          IconButton(
-            icon: const Icon(Icons.highlight_alt_rounded),
-            color: Colors.red,
-            disabledColor: ThemeConstants.thirdColor,
-            tooltip:
-                "Select save path where your audio will be saved.\n*Default path is 'Documents' folder",
-            onPressed: store.convertingInProgress
-                ? null
-                : () async {
-                    String? selectedDirectory =
-                        await FilePicker.platform.getDirectoryPath();
+          Tooltip(
+            message:
+                "Select save path where your audio will be saved.\n*Default path is 'Documents' folder.",
+            child: ElevatedButton(
+              onPressed: store.convertingInProgress
+                  ? null
+                  : () async {
+                      String? selectedDirectory =
+                          await FilePicker.platform.getDirectoryPath();
 
-                    if (selectedDirectory != null) {
-                      store.savePath = selectedDirectory;
-                    }
-                  },
+                      if (selectedDirectory != null) {
+                        store.savePath = selectedDirectory;
+                      }
+                    },
+              child: const Icon(Icons.highlight_alt_rounded),
+            ),
           ),
           SizedBox(width: leftMargine),
           Text(
@@ -96,14 +96,22 @@ class VideoConfigurations extends StatelessWidget {
           SizedBox(width: leftMargine),
           const Text("Tags:"),
           SizedBox(width: leftMargine),
-          IconButton(
-            icon: const Icon(Icons.tag),
-            color: Colors.red,
-            disabledColor: ThemeConstants.thirdColor,
-            tooltip: "Add tags to converted Mp3 file.",
-            onPressed: store.convertingInProgress
-                ? null
-                : () => _showMp3TagDialog(context, store),
+          Tooltip(
+            message: "Add tags to converted Mp3 file.",
+            child: ElevatedButton(
+              onPressed: store.convertingInProgress
+                  ? null
+                  : () => _showMp3TagDialog(context, store),
+              child: const Icon(Icons.tag),
+            ),
+          ),
+          SizedBox(width: leftMargine),
+          Visibility(
+            visible: store.tag?.albumCoverImage != null,
+            child: const Icon(
+              Icons.check_circle_outline_rounded,
+              color: ThemeConstants.iconSuccessfulColor,
+            ),
           )
         ],
       ),
@@ -257,10 +265,10 @@ class VideoConfigurations extends StatelessWidget {
       builder: (BuildContext buildContext) {
         return AlertDialog(
           title: const Text('Did you forgot Ffmpeg?',
-              style: ThemeConstants.mainTextStyle),
+              style: ThemeConstants.textMainStyle),
           content: const Text(
               "To convert YouTube videos to mp3 we are using app called ffmpeg, and it seems that it's not installed on your machine.\nDo you want to install it?",
-              style: ThemeConstants.mainTextStyle),
+              style: ThemeConstants.textMainStyle),
           actions: [
             TextButton(
               style: ButtonStyle(
@@ -309,9 +317,9 @@ class VideoConfigurations extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(messageTitle, style: ThemeConstants.mainTextStyle),
+          title: Text(messageTitle, style: ThemeConstants.textMainStyle),
           content:
-              Text(convertErrorMessage, style: ThemeConstants.mainTextStyle),
+              Text(convertErrorMessage, style: ThemeConstants.textMainStyle),
           actions: [
             TextButton(
               style: ButtonStyle(
@@ -324,7 +332,7 @@ class VideoConfigurations extends StatelessWidget {
                 store.convertCurrentStep = '';
                 store.convertProggressPrecentage = 0.0;
               },
-              child: const Text("Ok", style: ThemeConstants.mainTextStyle),
+              child: const Text("Ok", style: ThemeConstants.textMainStyle),
             )
           ],
           backgroundColor: ThemeConstants.secondaryColor,

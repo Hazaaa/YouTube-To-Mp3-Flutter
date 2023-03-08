@@ -22,7 +22,7 @@ class Mp3TagDialog extends StatelessWidget {
     return Observer(
       builder: (_) => AlertDialog(
         title: const Text("Add Mp3 tag details:",
-            style: ThemeConstants.mainTextStyle),
+            style: ThemeConstants.textMainStyle),
         backgroundColor: ThemeConstants.secondaryColor,
         content: SizedBox(
           width: 500,
@@ -61,28 +61,28 @@ class Mp3TagDialog extends StatelessWidget {
                   TextField(
                     controller: titleTextController,
                     autofocus: true,
-                    style: ThemeConstants.mainTextStyle,
+                    style: ThemeConstants.textMainStyle,
                     decoration: const InputDecoration(
                         labelText: 'Title:', hintText: 'Add song title...'),
                   ),
                   const SizedBox(height: 20.0),
                   TextField(
                     controller: authorTextController,
-                    style: ThemeConstants.mainTextStyle,
+                    style: ThemeConstants.textMainStyle,
                     decoration: const InputDecoration(
                         labelText: 'Author:', hintText: 'Add song author...'),
                   ),
                   const SizedBox(height: 20.0),
                   TextField(
                     controller: albumTextController,
-                    style: ThemeConstants.mainTextStyle,
+                    style: ThemeConstants.textMainStyle,
                     decoration: const InputDecoration(
                         labelText: 'Album:', hintText: 'Add song album...'),
                   ),
                   const SizedBox(height: 20.0),
                   TextField(
                     controller: genreTextController,
-                    style: ThemeConstants.mainTextStyle,
+                    style: ThemeConstants.textMainStyle,
                     decoration: const InputDecoration(
                         labelText: 'Genre:', hintText: 'Add song genre...'),
                   )
@@ -107,7 +107,7 @@ class Mp3TagDialog extends StatelessWidget {
                   albumCoverImage: store.tag?.albumCoverImage);
               store.tag = newTag;
             },
-            child: const Text("Save", style: ThemeConstants.mainTextStyle),
+            child: const Text("Save", style: ThemeConstants.textMainStyle),
           ),
           TextButton(
             style: ButtonStyle(
@@ -117,7 +117,7 @@ class Mp3TagDialog extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text("Cancel", style: ThemeConstants.mainTextStyle),
+            child: const Text("Cancel", style: ThemeConstants.textMainStyle),
           )
         ],
       ),

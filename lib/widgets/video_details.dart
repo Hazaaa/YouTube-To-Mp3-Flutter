@@ -10,14 +10,16 @@ import 'package:youtube_to_mp3_v2/theme/theme_constants.dart';
 class VideoDetails extends StatelessWidget {
   const VideoDetails({Key? key}) : super(key: key);
 
+  static const double detailsHorizontalSpacing = 15;
+
   List<Widget> getDetailWidgetWithSpacing(String detailName, String? text) {
     return [
-      const SizedBox(height: ThemeConstants.detailsHorizontalSpacing),
+      const SizedBox(height: detailsHorizontalSpacing),
       Row(
         children: [
           Text(
             "$detailName: ",
-            style: ThemeConstants.detailNameTextStyle,
+            style: ThemeConstants.textDetailNameStyle,
           ),
           SizedBox(
             width: 250,

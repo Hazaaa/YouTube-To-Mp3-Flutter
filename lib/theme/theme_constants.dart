@@ -6,14 +6,7 @@ class ThemeConstants {
   static const Color secondaryColor = Color.fromARGB(255, 34, 34, 34);
   static const Color thirdColor = Colors.grey;
   static const Color fourthColor = Colors.white;
-  static const Color borderColor = secondaryColor;
-  static const Color errorColor = Colors.red;
-  static const Color iconColor = fourthColor;
-
-  // Sizes
-  static const double windowBorderSize = 2;
-  static const double textFontSize = 16;
-  static const double detailsHorizontalSpacing = 15;
+  static const Color fifthColor = Colors.red;
 
   // Input
   static const Color inputTextColor = fourthColor;
@@ -28,8 +21,24 @@ class ThemeConstants {
   static const Color inputCursorColor = fourthColor;
 
   // Text
-  static const TextStyle mainTextStyle = TextStyle(
+  static const double textFontSize = 16;
+  static const TextStyle textMainStyle = TextStyle(
       color: fourthColor, fontSize: textFontSize, overflow: TextOverflow.clip);
-  static const TextStyle detailNameTextStyle =
-      TextStyle(fontWeight: FontWeight.bold, color: Colors.red);
+  static const TextStyle textDetailNameStyle =
+      TextStyle(fontWeight: FontWeight.bold, color: fifthColor);
+
+  // Button
+  static const Color buttonBackgroundColor = fifthColor;
+  static const Color buttonDisableColor = thirdColor;
+
+  // Icon
+  static const Color iconColor = fourthColor;
+  static const Color iconSuccessfulColor = Colors.green;
+
+  // Border
+  static const double borderWindowSize = 2;
+  static const Color borderColor = secondaryColor;
+
+  // Error
+  static const Color errorColor = fifthColor;
 }

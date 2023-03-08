@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
           home: Scaffold(
             body: WindowBorder(
               color: ThemeConstants.secondaryColor,
-              width: ThemeConstants.windowBorderSize,
+              width: ThemeConstants.borderWindowSize,
               child: Column(
                 children: const [
                   SizedBox(height: 8),
