@@ -84,6 +84,7 @@ abstract class _MainStore with Store {
     } else {
       videoMetadata = await _downloadAndConvertServicesWrapper.downloadService
           .getVideoMetadata(videoUrl);
+      tag = Mp3Tag(title: videoMetadata!.title, author: videoMetadata!.author);
     }
     videoMetadataDownloadingInProgress = false;
   }

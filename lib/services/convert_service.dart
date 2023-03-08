@@ -29,6 +29,7 @@ class ConvertService {
       // Removing temporary mp4 file.
       await File(pathToMp4).delete();
     } else {
+      print(process.stderr);
       throw ConvertingException();
     }
   }
@@ -75,7 +76,7 @@ class ConvertService {
 
     if (tag.author != null && tag.author!.isNotEmpty) {
       ffmpegArguments.addAll(
-        ['-metadata', 'author=${tag.author}'],
+        ['-metadata', 'artist=${tag.author}'],
       );
     }
 
@@ -102,7 +103,10 @@ class ConvertService {
     final process =
         await Process.run('ffmpeg', ffmpegArguments, runInShell: true);
 
-    if (process.exitCode != 0) {
+    if (process.exitCode == 0) {
+      // Removing temporary mp3 file.
+      await File(mp3Path).delete();
+    } else {
       print(process.stderr);
       throw ApplyingTagsException();
     }

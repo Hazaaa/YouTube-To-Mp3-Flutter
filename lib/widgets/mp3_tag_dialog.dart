@@ -14,11 +14,10 @@ class Mp3TagDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = Provider.of<MainStore>(context);
-
-    String title = '';
-    String author = '';
-    String album = '';
-    String genre = '';
+    final titleTextController = TextEditingController(text: store.tag?.title);
+    final authorTextController = TextEditingController(text: store.tag?.author);
+    final albumTextController = TextEditingController(text: store.tag?.album);
+    final genreTextController = TextEditingController(text: store.tag?.genre);
 
     return Observer(
       builder: (_) => AlertDialog(
@@ -39,22 +38,9 @@ class Mp3TagDialog extends StatelessWidget {
                   );
 
                   if (pickedImage != null && pickedImage.files.isNotEmpty) {
-                    if (title.isNotEmpty ||
-                        author.isNotEmpty ||
-                        album.isNotEmpty ||
-                        genre.isNotEmpty) {
-                      store.tag = Mp3Tag(
-                        title: title,
-                        author: author,
-                        album: album,
-                        genre: genre,
-                        albumCoverImage: File(pickedImage.files.first.path!),
-                      );
-                    } else {
-                      store.tag = Mp3Tag(
-                        albumCoverImage: File(pickedImage.files.first.path!),
-                      );
-                    }
+                    store.tag = store.tag!.setAlbumCover(
+                      File(pickedImage.files.first.path!),
+                    );
                   }
                 },
                 child: store.tag?.albumCoverImage != null
@@ -73,40 +59,32 @@ class Mp3TagDialog extends StatelessWidget {
               Expanded(
                 child: Column(children: [
                   TextField(
-                    controller:
-                        _getTextControllerWithDefaultValue(store.tag?.title),
+                    controller: titleTextController,
                     autofocus: true,
                     style: ThemeConstants.mainTextStyle,
                     decoration: const InputDecoration(
                         labelText: 'Title:', hintText: 'Add song title...'),
-                    onChanged: (value) => title = value,
                   ),
                   const SizedBox(height: 20.0),
                   TextField(
-                    controller:
-                        _getTextControllerWithDefaultValue(store.tag?.author),
+                    controller: authorTextController,
                     style: ThemeConstants.mainTextStyle,
                     decoration: const InputDecoration(
                         labelText: 'Author:', hintText: 'Add song author...'),
-                    onChanged: (value) => author = value,
                   ),
                   const SizedBox(height: 20.0),
                   TextField(
-                    controller:
-                        _getTextControllerWithDefaultValue(store.tag?.album),
+                    controller: albumTextController,
                     style: ThemeConstants.mainTextStyle,
                     decoration: const InputDecoration(
                         labelText: 'Album:', hintText: 'Add song album...'),
-                    onChanged: (value) => album = value,
                   ),
                   const SizedBox(height: 20.0),
                   TextField(
-                    controller:
-                        _getTextControllerWithDefaultValue(store.tag?.genre),
+                    controller: genreTextController,
                     style: ThemeConstants.mainTextStyle,
                     decoration: const InputDecoration(
                         labelText: 'Genre:', hintText: 'Add song genre...'),
-                    onChanged: (value) => genre = value,
                   )
                 ]),
               ),
@@ -122,10 +100,10 @@ class Mp3TagDialog extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pop();
               final newTag = Mp3Tag(
-                  title: title,
-                  author: author,
-                  album: album,
-                  genre: genre,
+                  title: titleTextController.text,
+                  author: authorTextController.text,
+                  album: albumTextController.text,
+                  genre: genreTextController.text,
                   albumCoverImage: store.tag?.albumCoverImage);
               store.tag = newTag;
             },
@@ -144,10 +122,5 @@ class Mp3TagDialog extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  TextEditingController _getTextControllerWithDefaultValue(
-      String? initialValue) {
-    return TextEditingController(text: initialValue ?? '');
   }
 }

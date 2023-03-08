@@ -14,6 +14,13 @@ class Mp3Tag {
   Mp3Tag(
       {this.title, this.author, this.album, this.genre, this.albumCoverImage});
 
+  Mp3Tag setAlbumCover(File albumCoverImage) {
+    final tempNewTag = Mp3Tag.createNewCopy(this);
+    tempNewTag.albumCoverImage = albumCoverImage;
+
+    return tempNewTag;
+  }
+
   static Mp3Tag createNewCopy(Mp3Tag? original) {
     if (original == null) {
       return Mp3Tag();
