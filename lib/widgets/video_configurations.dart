@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:youtube_to_mp3_v2/exceptions/applying_tags_exception.dart';
 import 'package:youtube_to_mp3_v2/exceptions/converting_exception.dart';
 import 'package:youtube_to_mp3_v2/exceptions/missing_ffmpeg_exception.dart';
 import 'package:youtube_to_mp3_v2/store/main_store.dart';
@@ -164,7 +165,20 @@ class VideoConfigurations extends StatelessWidget {
 
                     if (result.exception is ConvertingException) {
                       _showConvertingErrorDialog(
-                          context, store, result.exception.toString());
+                        context,
+                        store,
+                        "Converting error :(",
+                        result.exception.toString(),
+                      );
+                    }
+
+                    if (result.exception is ApplyingTagsException) {
+                      _showConvertingErrorDialog(
+                        context,
+                        store,
+                        "Applying tags error :(",
+                        result.exception.toString(),
+                      );
                     }
                   }
                 },
@@ -288,15 +302,14 @@ class VideoConfigurations extends StatelessWidget {
     );
   }
 
-  void _showConvertingErrorDialog(
-      BuildContext context, MainStore store, String convertErrorMessage) {
+  void _showConvertingErrorDialog(BuildContext context, MainStore store,
+      String messageTitle, String convertErrorMessage) {
     showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Converting error :(",
-              style: ThemeConstants.mainTextStyle),
+          title: Text(messageTitle, style: ThemeConstants.mainTextStyle),
           content:
               Text(convertErrorMessage, style: ThemeConstants.mainTextStyle),
           actions: [

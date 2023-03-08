@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:youtube_to_mp3_v2/exceptions/applying_tags_exception.dart';
 import 'package:youtube_to_mp3_v2/exceptions/converting_exception.dart';
 import 'package:youtube_to_mp3_v2/exceptions/missing_ffmpeg_exception.dart';
 import 'package:youtube_to_mp3_v2/models/mp3_tag.dart';
@@ -114,7 +115,7 @@ abstract class _MainStore with Store {
 
     final fileBaseSavePath = '$savePath\\${videoMetadata?.title}';
     final mp4SavePath = '$fileBaseSavePath.mp4';
-    final mp3SvePath = '$fileBaseSavePath.mp3';
+    final mp3SavePath = '$fileBaseSavePath.mp3';
 
     try {
       _updateConvertingCurrentProcessText('Downloading video...');
@@ -125,8 +126,16 @@ abstract class _MainStore with Store {
 
       _updateConvertingCurrentProcessText('Converting video...');
       await _downloadAndConvertServicesWrapper.convertService
-          .convertMp4ToMp3(pathToMp4, mp3SvePath);
+          .convertMp4ToMp3(pathToMp4, mp3SavePath);
+
+      _updateConvertingProcessPrecentage(0.8);
+
+      _updateConvertingCurrentProcessText('Applying tags...');
+      await _downloadAndConvertServicesWrapper.convertService
+          .applyTagsToMp3(mp3SavePath, tag);
     } on ConvertingException catch (ex) {
+      return Result(succesfull: false, exception: ex);
+    } on ApplyingTagsException catch (ex) {
       return Result(succesfull: false, exception: ex);
     }
 
