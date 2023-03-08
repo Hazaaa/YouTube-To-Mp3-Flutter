@@ -14,8 +14,10 @@ class Header extends StatelessWidget {
         children: [
           const SizedBox(width: 30),
           const Logo(),
-          const SizedBox(width: 10),
-          const Text("YouTube To Mp3"),
+          const SizedBox(width: 13),
+          Container(
+              margin: const EdgeInsets.only(bottom: 4),
+              child: const Text("YouTube To Mp3")),
           Expanded(child: MoveWindow()),
           const WindowButtons()
         ],

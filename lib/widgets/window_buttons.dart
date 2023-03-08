@@ -18,7 +18,6 @@ class WindowButtons extends StatelessWidget {
     return Row(
       children: [
         MinimizeWindowButton(colors: buttonsColors),
-        MaximizeWindowButton(colors: buttonsColors),
         CloseWindowButton(colors: closeButtonColors)
       ],
     );

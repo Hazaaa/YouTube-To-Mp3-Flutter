@@ -68,8 +68,8 @@ class VideoConfigurations extends StatelessWidget {
               onPressed: store.convertingInProgress
                   ? null
                   : () async {
-                      String? selectedDirectory =
-                          await FilePicker.platform.getDirectoryPath();
+                      String? selectedDirectory = await FilePicker.platform
+                          .getDirectoryPath(lockParentWindow: true);
 
                       if (selectedDirectory != null) {
                         store.savePath = selectedDirectory;
@@ -252,6 +252,7 @@ class VideoConfigurations extends StatelessWidget {
   void _showMp3TagDialog(BuildContext context, MainStore store) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext buildContext) {
         return const Mp3TagDialog();
       },
