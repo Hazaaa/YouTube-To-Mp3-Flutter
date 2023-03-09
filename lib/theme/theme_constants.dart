@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+class ConfigurationConstants {
+  static const String applicationTitle = "YouTube To Mp3";
+  static const Size initialApplicationSize = Size(800, 600);
+  static const Alignment initialApplicationAlignment = Alignment.center;
+}
+
 class ThemeConstants {
   // Colors
   static const Color primaryColor = Color.fromARGB(255, 15, 15, 15);
