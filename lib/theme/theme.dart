@@ -8,16 +8,19 @@ final ThemeData customTheme = ThemeData(
     cursorColor: ThemeConstants.inputCursorColor,
     selectionColor: ThemeConstants.secondaryColor,
   ),
-  elevatedButtonTheme: ElevatedButtonThemeData(style: ButtonStyle(
-    backgroundColor:
-        MaterialStateColor.resolveWith((Set<MaterialState> states) {
-      if (states.contains(MaterialState.disabled)) {
-        return ThemeConstants.buttonDisableColor;
-      } else {
-        return ThemeConstants.buttonBackgroundColor;
-      }
-    }),
-  )),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ButtonStyle(
+      backgroundColor: MaterialStateColor.resolveWith(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.disabled)) {
+            return ThemeConstants.buttonDisableColor;
+          } else {
+            return ThemeConstants.buttonBackgroundColor;
+          }
+        },
+      ),
+    ),
+  ),
   textTheme: const TextTheme(
     bodyLarge: ThemeConstants.textMainStyle,
     bodyMedium: ThemeConstants.textMainStyle,

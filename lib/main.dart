@@ -1,6 +1,9 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:youtube_to_mp3_v2/pages/home.dart';
 import 'package:youtube_to_mp3_v2/services/convert_service.dart';
 import 'package:youtube_to_mp3_v2/services/download_and_convert_service_wrapper.dart';
@@ -52,10 +55,53 @@ class MyApp extends StatelessWidget {
               color: ThemeConstants.secondaryColor,
               width: ThemeConstants.borderWindowSize,
               child: Column(
-                children: const [
-                  SizedBox(height: 8),
-                  Header(),
-                  Expanded(child: HomePage())
+                children: [
+                  const SizedBox(height: 8),
+                  const Header(),
+                  const Expanded(
+                    child: HomePage(),
+                  ),
+                  Row(
+                    children: [
+                      const SizedBox(width: 15),
+                      IconButton(
+                        tooltip:
+                            'Found a bug or you have a suggestion?\nPlease create issue in the GitHub repo and try it to explain as much as you can.\nThank you!',
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        icon: const FaIcon(
+                          FontAwesomeIcons.github,
+                          color: ThemeConstants.fourthColor,
+                        ),
+                        onPressed: () async {
+                          const gitHubUrl =
+                              'https://github.com/Hazaaa/YouTube-To-Mp3-v2';
+
+                          if (await canLaunchUrlString(gitHubUrl)) {
+                            await launchUrlString(gitHubUrl);
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                        tooltip: 'You can follow me on Medium :)',
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        icon: const FaIcon(
+                          FontAwesomeIcons.medium,
+                          color: ThemeConstants.fourthColor,
+                        ),
+                        onPressed: () async {
+                          const mediumUrl =
+                              'https://medium.com/@stefanacimovicMEng';
+
+                          if (await canLaunchUrlString(mediumUrl)) {
+                            await launchUrlString(mediumUrl);
+                          }
+                        },
+                      )
+                    ],
+                  )
                 ],
               ),
             ),
