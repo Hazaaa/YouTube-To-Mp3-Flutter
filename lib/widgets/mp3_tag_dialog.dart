@@ -17,6 +17,9 @@ class Mp3TagDialog extends StatelessWidget {
     final titleTextController = TextEditingController(text: store.tag?.title);
     final authorTextController = TextEditingController(text: store.tag?.author);
     final albumTextController = TextEditingController(text: store.tag?.album);
+    final albumArtistTextController =
+        TextEditingController(text: store.tag?.albumArtist);
+    final yearTextController = TextEditingController(text: store.tag?.year);
     final genreTextController = TextEditingController(text: store.tag?.genre);
 
     return Observer(
@@ -26,7 +29,7 @@ class Mp3TagDialog extends StatelessWidget {
         backgroundColor: ThemeConstants.secondaryColor,
         content: SizedBox(
           width: 500,
-          height: 255,
+          height: 395,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -70,7 +73,8 @@ class Mp3TagDialog extends StatelessWidget {
                     controller: authorTextController,
                     style: ThemeConstants.textMainStyle,
                     decoration: const InputDecoration(
-                        labelText: 'Author:', hintText: 'Add song author...'),
+                        labelText: 'Artist(s):',
+                        hintText: 'Add song artist(s)...'),
                   ),
                   const SizedBox(height: 20.0),
                   TextField(
@@ -81,11 +85,26 @@ class Mp3TagDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 20.0),
                   TextField(
+                    controller: albumArtistTextController,
+                    style: ThemeConstants.textMainStyle,
+                    decoration: const InputDecoration(
+                        labelText: 'Album artist(s):',
+                        hintText: 'Add album artist(s)...'),
+                  ),
+                  const SizedBox(height: 20.0),
+                  TextField(
+                    controller: yearTextController,
+                    style: ThemeConstants.textMainStyle,
+                    decoration: const InputDecoration(
+                        labelText: 'Year:', hintText: 'Add song year...'),
+                  ),
+                  const SizedBox(height: 20.0),
+                  TextField(
                     controller: genreTextController,
                     style: ThemeConstants.textMainStyle,
                     decoration: const InputDecoration(
                         labelText: 'Genre:', hintText: 'Add song genre...'),
-                  )
+                  ),
                 ]),
               ),
             ],
@@ -103,8 +122,10 @@ class Mp3TagDialog extends StatelessWidget {
                   title: titleTextController.text,
                   author: authorTextController.text,
                   album: albumTextController.text,
+                  albumArtist: albumArtistTextController.text,
                   genre: genreTextController.text,
-                  albumCoverImage: store.tag?.albumCoverImage);
+                  albumCoverImage: store.tag?.albumCoverImage,
+                  year: yearTextController.text);
               store.tag = newTag;
             },
             child: const Text("Save", style: ThemeConstants.textMainStyle),

@@ -87,16 +87,32 @@ class ConvertService {
       );
     }
 
+    if (tag.albumArtist != null && tag.albumArtist!.isNotEmpty) {
+      ffmpegArguments.addAll(
+        ['-metadata', 'TPE2=${tag.albumArtist}'],
+      );
+    }
+
     if (tag.genre != null && tag.genre!.isNotEmpty) {
       ffmpegArguments.addAll(
         ['-metadata', 'genre=${tag.genre}'],
       );
     }
 
+    if (tag.year != null &&
+        tag.year!.isNotEmpty &&
+        int.tryParse(tag.year!) != null) {
+      ffmpegArguments.addAll(
+        ['-metadata', 'date=${int.parse(tag.year!)}'],
+      );
+    }
+
     String outputMp3FilePath = mp3Path;
     if (tag.author != null && tag.title != null) {
+      List<String> authors = tag.author!.split(';');
+
       outputMp3FilePath =
-          '${path.dirname(mp3Path)}\\${tag.author} - ${tag.title}.mp3';
+          '${path.dirname(mp3Path)}\\${authors.join(' &')} - ${tag.title}.mp3';
     }
 
     ffmpegArguments.add(outputMp3FilePath);

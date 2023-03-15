@@ -7,12 +7,22 @@ class Mp3Tag {
 
   String? album;
 
+  String? albumArtist;
+
+  String? year;
+
   String? genre;
 
   File? albumCoverImage;
 
   Mp3Tag(
-      {this.title, this.author, this.album, this.genre, this.albumCoverImage});
+      {this.title,
+      this.author,
+      this.album,
+      this.albumArtist,
+      this.year,
+      this.genre,
+      this.albumCoverImage});
 
   Mp3Tag setAlbumCover(File albumCoverImage) {
     final tempNewTag = Mp3Tag.createNewCopy(this);
@@ -30,6 +40,8 @@ class Mp3Tag {
         title: original.title,
         author: original.author,
         album: original.album,
+        albumArtist: original.albumArtist,
+        year: original.year,
         genre: original.genre,
         albumCoverImage: original.albumCoverImage);
   }
