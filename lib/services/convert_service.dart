@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:developer';
 
 import 'package:youtube_to_mp3_v2/exceptions/applying_tags_exception.dart';
 import 'package:youtube_to_mp3_v2/exceptions/converting_exception.dart';
@@ -29,7 +30,7 @@ class ConvertService {
       // Removing temporary mp4 file.
       await File(pathToMp4).delete();
     } else {
-      print(process.stderr);
+      log('Converting error: ${process.stderr}');
       throw ConvertingException();
     }
   }
@@ -107,7 +108,7 @@ class ConvertService {
       // Removing temporary mp3 file.
       await File(mp3Path).delete();
     } else {
-      print(process.stderr);
+      log('Applying tags error: ${process.stderr}');
       throw ApplyingTagsException();
     }
   }

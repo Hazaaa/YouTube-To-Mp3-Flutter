@@ -96,13 +96,9 @@ abstract class _MainStore with Store {
 
     _updateConvertingCurrentProcessText('Checking ffmpeg...');
 
-    try {
-      await Process.run('ffmpeg', ['-version'], runInShell: true);
-    } on ProcessException catch (_) {
-      return Result(
-        succesfull: false,
-        exception: MissingFfmpegException(),
-      );
+    Result isFfmpegInstalledResult = await _isFfmpegInstalled();
+    if (!isFfmpegInstalledResult.succesfull) {
+      return isFfmpegInstalledResult;
     }
 
     _updateConvertingProcessPrecentage(0.05);
@@ -173,6 +169,25 @@ abstract class _MainStore with Store {
     RegExpMatch? match = exp.firstMatch(url);
 
     return match != null ? match.group(4)! : null;
+  }
+
+  /// Runs 'ffmpeg -version' function to check if ffmpeg is installed on device.
+  ///
+  /// [Returns] - 'Result' object containing true if ffmpeg is installed, otherwise false and adequate exception.
+  Future<Result> _isFfmpegInstalled() async {
+    late bool isFfmpegInstalled;
+
+    try {
+      await Process.run('ffmpeg', ['-version'], runInShell: true);
+      isFfmpegInstalled = true;
+    } on ProcessException catch (_) {
+      isFfmpegInstalled = false;
+    }
+
+    return Result(
+      succesfull: isFfmpegInstalled,
+      exception: !isFfmpegInstalled ? MissingFfmpegException() : null,
+    );
   }
 
   void _updateConvertingCurrentProcessText(String currentStep) {
