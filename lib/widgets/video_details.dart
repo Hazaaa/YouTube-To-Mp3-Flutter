@@ -87,7 +87,8 @@ class VideoDetails extends StatelessWidget {
                 height: 300,
                 width: 300,
                 child: Image.network(
-                  YoutubeThumbnail(youtubeId: store.videoId).hd(),
+                  YoutubeThumbnail(youtubeId: store.videoMetadata!.id.value)
+                      .hd(),
                 ),
               ),
             ),

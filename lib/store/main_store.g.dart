@@ -25,21 +25,6 @@ mixin _$MainStore on _MainStore, Store {
     });
   }
 
-  late final _$videoIdAtom = Atom(name: '_MainStore.videoId', context: context);
-
-  @override
-  String get videoId {
-    _$videoIdAtom.reportRead();
-    return super.videoId;
-  }
-
-  @override
-  set videoId(String value) {
-    _$videoIdAtom.reportWrite(value, super.videoId, () {
-      super.videoId = value;
-    });
-  }
-
   late final _$videoMetadataAtom =
       Atom(name: '_MainStore.videoMetadata', context: context);
 
@@ -230,7 +215,6 @@ mixin _$MainStore on _MainStore, Store {
   String toString() {
     return '''
 videoUrl: ${videoUrl},
-videoId: ${videoId},
 videoMetadata: ${videoMetadata},
 videoMetadataDownloadingInProgress: ${videoMetadataDownloadingInProgress},
 convertingInProgress: ${convertingInProgress},

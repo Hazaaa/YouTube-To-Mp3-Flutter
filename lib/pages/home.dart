@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
             builder: (_) => Positioned(
               top: size.height * 0.18,
               left: size.width * 0.05,
-              child: store.videoId.isNotEmpty && store.videoMetadata != null
+              child: store.videoMetadata != null
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [

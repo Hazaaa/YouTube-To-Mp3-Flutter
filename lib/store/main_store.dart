@@ -26,9 +26,6 @@ abstract class _MainStore with Store {
   String videoUrl = '';
 
   @observable
-  String videoId = '';
-
-  @observable
   Video? videoMetadata;
 
   @observable
@@ -69,7 +66,6 @@ abstract class _MainStore with Store {
           'Provided Video URL is not valid! Please check it and try again!');
     } else {
       videoUrl = enteredVideoUrl;
-      videoId = convertUrlToId(enteredVideoUrl)!;
       _updateConvertingErrorText('');
     }
   }
@@ -117,7 +113,7 @@ abstract class _MainStore with Store {
     try {
       _updateConvertingCurrentProcessText('Downloading video...');
       final pathToMp4 = await _downloadAndConvertServicesWrapper.downloadService
-          .downloadVideo(videoId, mp4SavePath);
+          .downloadVideo(videoMetadata!.id.value, mp4SavePath);
 
       _updateConvertingProcessPrecentage(0.5);
 
@@ -144,10 +140,10 @@ abstract class _MainStore with Store {
     return Result(succesfull: true);
   }
 
+  /// Returns store to initial value.
   @action
   void clearInput() {
     videoUrl = '';
-    videoId = '';
     videoMetadata = null;
     videoMetadataDownloadingInProgress = false;
     convertingInProgress = false;
@@ -157,18 +153,6 @@ abstract class _MainStore with Store {
     convertCurrentStep = '';
     convertProggressPrecentage = 0.0;
     tag = null;
-  }
-
-  String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
-    if (!url.contains("http") && (url.length == 11)) return url;
-    if (trimWhitespaces) url = url.trim();
-    const youtubeUrlPattern =
-        r"^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be|music\.youtube\.com)\/watch\?v=([A-Za-z0-9_-]+).*$";
-
-    RegExp exp = RegExp(youtubeUrlPattern);
-    RegExpMatch? match = exp.firstMatch(url);
-
-    return match != null ? match.group(4)! : null;
   }
 
   /// Runs 'ffmpeg -version' function to check if ffmpeg is installed on device.

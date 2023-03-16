@@ -1,7 +1,7 @@
 name: youtube_to_mp3_v2
 description: Small application for converting YouTube videos to Mp3.
 version: 0.1.0
-
+maintainer: https://github.com/Hazaaa
 homepage: https://github.com/Hazaaa/YouTube-To-Mp3-v2
 
 # The following line prevents the package from being accidentally published to
