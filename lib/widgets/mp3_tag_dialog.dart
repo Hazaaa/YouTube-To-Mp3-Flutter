@@ -17,15 +17,19 @@ class Mp3TagDialog extends StatelessWidget {
     final titleTextController = TextEditingController(text: store.tag?.title);
     final authorTextController = TextEditingController(text: store.tag?.author);
     final albumTextController = TextEditingController(text: store.tag?.album);
-    final albumArtistTextController =
-        TextEditingController(text: store.tag?.albumArtist);
+    final albumArtistTextController = TextEditingController(
+        text: (store.tag?.albumArtist != null && store.tag?.albumArtist != "")
+            ? store.tag?.albumArtist
+            : store.tag?.author);
     final yearTextController = TextEditingController(text: store.tag?.year);
     final genreTextController = TextEditingController(text: store.tag?.genre);
 
     return Observer(
       builder: (_) => AlertDialog(
-        title: const Text("Add Mp3 tag details:",
-            style: ThemeConstants.textMainStyle),
+        title: const Text(
+          "Add Mp3 tag details:",
+          style: ThemeConstants.textMainStyle,
+        ),
         backgroundColor: ThemeConstants.secondaryColor,
         content: SizedBox(
           width: 500,
@@ -35,76 +39,43 @@ class Mp3TagDialog extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () async {
-                  final pickedImage = await FilePicker.platform.pickFiles(
-                    type: FileType.image,
-                    dialogTitle: 'Pick album cover image',
-                  );
-
-                  if (pickedImage != null && pickedImage.files.isNotEmpty) {
-                    store.tag = store.tag!.setAlbumCover(
-                      File(pickedImage.files.first.path!),
-                    );
-                  }
+                  await _pickAlbumCover(store);
                 },
-                child: store.tag?.albumCoverImage != null
-                    ? Image.file(
-                        store.tag!.albumCoverImage!,
-                        width: 200,
-                        height: 200,
-                      )
-                    : Image.asset(
-                        'assets/DefaultSongCover.jpg',
-                        width: 200,
-                        height: 200,
-                      ),
+                child: _getAlbumCoverImage(store),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(children: [
-                  TextField(
-                    controller: titleTextController,
-                    autofocus: true,
-                    style: ThemeConstants.textMainStyle,
-                    decoration: const InputDecoration(
-                        labelText: 'Title:', hintText: 'Add song title...'),
-                  ),
+                  _getInputTextField(
+                      textController: titleTextController,
+                      label: 'Title:',
+                      hint: 'Add song title...',
+                      focus: true),
                   const SizedBox(height: 20.0),
-                  TextField(
-                    controller: authorTextController,
-                    style: ThemeConstants.textMainStyle,
-                    decoration: const InputDecoration(
-                        labelText: 'Artist(s):',
-                        hintText: 'Add song artist(s)...'),
-                  ),
+                  _getInputTextField(
+                      textController: authorTextController,
+                      label: 'Artist(s):',
+                      hint: 'Add song artist(s)...'),
                   const SizedBox(height: 20.0),
-                  TextField(
-                    controller: albumTextController,
-                    style: ThemeConstants.textMainStyle,
-                    decoration: const InputDecoration(
-                        labelText: 'Album:', hintText: 'Add song album...'),
-                  ),
+                  _getInputTextField(
+                      textController: albumArtistTextController,
+                      label: 'Album artist(s):',
+                      hint: 'Add album artist(s)...'),
                   const SizedBox(height: 20.0),
-                  TextField(
-                    controller: albumArtistTextController,
-                    style: ThemeConstants.textMainStyle,
-                    decoration: const InputDecoration(
-                        labelText: 'Album artist(s):',
-                        hintText: 'Add album artist(s)...'),
-                  ),
+                  _getInputTextField(
+                      textController: albumTextController,
+                      label: 'Album:',
+                      hint: 'Add song album...'),
                   const SizedBox(height: 20.0),
-                  TextField(
-                    controller: yearTextController,
-                    style: ThemeConstants.textMainStyle,
-                    decoration: const InputDecoration(
-                        labelText: 'Year:', hintText: 'Add song year...'),
-                  ),
+                  _getInputTextField(
+                      textController: yearTextController,
+                      label: 'Year:',
+                      hint: 'Add song year...'),
                   const SizedBox(height: 20.0),
-                  TextField(
-                    controller: genreTextController,
-                    style: ThemeConstants.textMainStyle,
-                    decoration: const InputDecoration(
-                        labelText: 'Genre:', hintText: 'Add song genre...'),
-                  ),
+                  _getInputTextField(
+                      textController: genreTextController,
+                      label: 'Genre:',
+                      hint: 'Add song genre...')
                 ]),
               ),
             ],
@@ -143,5 +114,48 @@ class Mp3TagDialog extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Gets TextField widget with provided text controller, label and hint.
+  TextField _getInputTextField(
+      {required TextEditingController textController,
+      required String label,
+      required String hint,
+      bool focus = false}) {
+    return TextField(
+      controller: textController,
+      autofocus: focus,
+      style: ThemeConstants.textMainStyle,
+      decoration: InputDecoration(labelText: label, hintText: hint),
+    );
+  }
+
+  /// Gets Image widget for Album cover if it's set, otherwise returns default song cover.
+  Image _getAlbumCoverImage(MainStore store) {
+    return store.tag?.albumCoverImage != null
+        ? Image.file(
+            store.tag!.albumCoverImage!,
+            width: 200,
+            height: 200,
+          )
+        : Image.asset(
+            'assets/DefaultSongCover.jpg',
+            width: 200,
+            height: 200,
+          );
+  }
+
+  /// Picks album cover using file picker package.
+  Future<void> _pickAlbumCover(MainStore store) async {
+    final pickedImage = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      dialogTitle: 'Pick album cover image',
+    );
+
+    if (pickedImage != null && pickedImage.files.isNotEmpty) {
+      store.tag = store.tag!.setAlbumCover(
+        File(pickedImage.files.first.path!),
+      );
+    }
   }
 }
