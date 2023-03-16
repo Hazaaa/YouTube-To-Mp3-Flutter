@@ -1,7 +1,8 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:youtube_to_mp3_v2/widgets/logo.dart';
-import 'package:youtube_to_mp3_v2/widgets/window_buttons.dart';
+
+import 'package:youtube_to_mp3_v2/widgets/common/logo.dart';
+import 'package:youtube_to_mp3_v2/widgets/common/window_buttons.dart';
 
 class Header extends StatelessWidget {
   const Header({Key? key}) : super(key: key);

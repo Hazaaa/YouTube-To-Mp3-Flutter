@@ -9,8 +9,8 @@ import 'package:youtube_to_mp3_v2/providers/services_provider.dart';
 import 'package:youtube_to_mp3_v2/providers/store_provider.dart';
 import 'package:youtube_to_mp3_v2/theme/theme.dart';
 import 'package:youtube_to_mp3_v2/theme/theme_constants.dart';
-import 'package:youtube_to_mp3_v2/widgets/footer.dart';
-import 'package:youtube_to_mp3_v2/widgets/header.dart';
+import 'package:youtube_to_mp3_v2/widgets/core/footer.dart';
+import 'package:youtube_to_mp3_v2/widgets/core/header.dart';
 
 void main() {
   runApp(const MyApp());

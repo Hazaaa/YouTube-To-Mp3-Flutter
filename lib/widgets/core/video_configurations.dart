@@ -9,7 +9,7 @@ import 'package:youtube_to_mp3_v2/exceptions/converting_exception.dart';
 import 'package:youtube_to_mp3_v2/exceptions/missing_ffmpeg_exception.dart';
 import 'package:youtube_to_mp3_v2/store/main_store.dart';
 import 'package:youtube_to_mp3_v2/theme/theme_constants.dart';
-import 'package:youtube_to_mp3_v2/widgets/mp3_tag_dialog.dart';
+import 'package:youtube_to_mp3_v2/widgets/core/mp3_tag_dialog.dart';
 
 class VideoConfigurations extends StatelessWidget {
   const VideoConfigurations({Key? key}) : super(key: key);

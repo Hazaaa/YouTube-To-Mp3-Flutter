@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+
 import 'package:youtube_to_mp3_v2/store/main_store.dart';
-import 'package:youtube_to_mp3_v2/widgets/input.dart';
-import 'package:youtube_to_mp3_v2/widgets/vertical_divider.dart';
-import 'package:youtube_to_mp3_v2/widgets/video_configurations.dart';
-import 'package:youtube_to_mp3_v2/widgets/video_details.dart';
+import 'package:youtube_to_mp3_v2/widgets/common/input.dart';
+import 'package:youtube_to_mp3_v2/widgets/common/vertical_divider.dart';
+import 'package:youtube_to_mp3_v2/widgets/core/video_configurations.dart';
+import 'package:youtube_to_mp3_v2/widgets/core/video_details.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
