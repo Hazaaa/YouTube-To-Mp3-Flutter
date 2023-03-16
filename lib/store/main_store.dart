@@ -80,7 +80,10 @@ abstract class _MainStore with Store {
     } else {
       videoMetadata = await _downloadAndConvertServicesWrapper.downloadService
           .getVideoMetadata(videoUrl);
-      tag = Mp3Tag(title: videoMetadata!.title, author: videoMetadata!.author);
+      tag = Mp3Tag(
+        title: videoMetadata!.title,
+        author: _cleanVideoArtist(videoMetadata!.author),
+      );
     }
     videoMetadataDownloadingInProgress = false;
   }
@@ -172,6 +175,11 @@ abstract class _MainStore with Store {
       succesfull: isFfmpegInstalled,
       exception: !isFfmpegInstalled ? MissingFfmpegException() : null,
     );
+  }
+
+  // Cleans video artist by removing Topic from it's name if there is that.
+  String _cleanVideoArtist(String videoArtist) {
+    return videoArtist.split('- Topic')[0].trim();
   }
 
   void _updateConvertingCurrentProcessText(String currentStep) {
